@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart'; // Import SpinKit
 // import '../wrapper.dart';
 import '../../shared/constants.dart';
+import '../wrapper.dart';
 import 'landing_page.dart'; // Ensure correct import
 
 class SplashScreen extends StatefulWidget {

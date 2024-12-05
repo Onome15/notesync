@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:notesync/provider/theme_provider.dart';
+import 'package:notesync/screen/launch/splash_screen.dart';
 import 'firebase_options.dart';
-import 'screen/launch/splash_screen.dart'; // Import the SplashScreen
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'screen/wrapper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

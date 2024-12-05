@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:notesync/screen/authenticate/authenticate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notesync/screen/authenticate/authenticate.dart';
 import '../services/auth.dart';
 
 import 'Home/home_page.dart';
@@ -20,7 +20,7 @@ class Wrapper extends ConsumerWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
-          return HomePage(); // Replace with your authenticated screen
+          return const HomePage(); // Replace with your authenticated screen
         } else {
           return const Authenticate(); // Replace with your login screen
         }

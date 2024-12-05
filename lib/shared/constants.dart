@@ -111,13 +111,13 @@ Widget headerWithIcon({
         style: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
-          color: const Color(0xFF0057FF),
+          color: const Color.fromRGBO(33, 133, 176, 1),
         ),
       ),
       SizedBox(width: sizedBoxWidth),
       Icon(
         Icons.menu_book_rounded,
-        color: const Color(0xFF0057FF),
+        color: const Color.fromRGBO(33, 133, 176, 1),
         size: iconSize,
       ),
     ],

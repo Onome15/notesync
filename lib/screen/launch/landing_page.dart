@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:notesync/screen/wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth.dart';
 import '../../shared/constants.dart';
 import '../../provider/theme_provider.dart';
-import '../authenticate/authenticate.dart';
-// import '../authenticate/register.dart';
-// import '../authenticate/signin.dart';
 
 class LandingPage extends ConsumerWidget {
   const LandingPage({super.key});
@@ -56,20 +54,12 @@ class LandingPage extends ConsumerWidget {
                   switchButton(themeMode, themeNotifier),
                 ],
               ),
-              const Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Login or signup to continue",
-                    style: TextStyle(fontSize: 15),
-                  )),
               const SizedBox(height: 100),
               SvgPicture.asset(
                 'assets/landing_page/writing.svg',
-                colorFilter:
-                    const ColorFilter.mode(Color(0xFF0057FF), BlendMode.srcIn),
-                height: 250,
+                height: 300,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 100),
               headerWithIcon(),
               const Text(
                 "Write, read, update and save your notes \n to the cloud without worries",
@@ -84,38 +74,16 @@ class LandingPage extends ConsumerWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () =>
-                      _navigateWithFade(context, const Authenticate()),
+                  onPressed: () => _navigateWithFade(context, const Wrapper()),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 15),
-                    backgroundColor: accentColor,
+                    backgroundColor: const Color.fromRGBO(33, 133, 176, 1),
                   ),
-                  child: Text("Create an Account",
+                  child: Text("Get Started",
                       style: TextStyle(
                           color: surface, fontWeight: FontWeight.bold)),
                 ),
               ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () =>
-                      _navigateWithFade(context, const Authenticate()),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: accentColor),
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                  ),
-                  child: Text(
-                    "Already have an account",
-                    style: TextStyle(
-                        color: accentColor, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                  onPressed: authService.signInAnon,
-                  child: const Text("Continue anonymously?"))
             ],
           ),
         ),

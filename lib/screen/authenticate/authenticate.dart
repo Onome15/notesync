@@ -1,7 +1,7 @@
-import 'package:notesync/screen/authenticate/signin.dart';
 import 'package:flutter/material.dart';
 
-import 'register.dart';
+import 'register_screen.dart';
+import 'sign_in_screen.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({super.key});
@@ -21,8 +21,6 @@ class _AuthenticateState extends State<Authenticate> {
 
   @override
   Widget build(BuildContext context) {
-    return showSignIn
-        ? SignIn(toggleView: toggleView)
-        : Register(toggleView: toggleView);
+    return showSignIn ? const SignInScreen() : const RegisterScreen();
   }
 }
