@@ -14,6 +14,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashScreenState extends State<SplashScreen> {
+  Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
   @override
   void initState() {
     super.initState();
@@ -63,7 +64,7 @@ class SplashScreenState extends State<SplashScreen> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 30),
               child: SpinKitThreeBounce(
-                color: themeColor, // Same color as the text
+                color: primaryColor, // Same color as the text
                 size: 30.0,
               ),
             ),

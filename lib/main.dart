@@ -5,8 +5,6 @@ import 'package:notesync/screen/launch/splash_screen.dart';
 import 'firebase_options.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'screen/wrapper.dart';
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(

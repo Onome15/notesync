@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notesync/screen/authenticate/register_screen.dart';
 
+import 'shared_methods.dart';
+
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
@@ -16,22 +18,6 @@ class SignInScreenState extends State<SignInScreen> {
   bool _rememberMe = false;
   Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
   Color secColor = const Color.fromRGBO(33, 133, 176, 0.3);
-
-  Widget buildButton(String text, VoidCallback onPressed,
-      {Color color = Colors.grey, String? asset, IconData? icon}) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: asset != null
-          ? Image.asset(asset, height: 24, width: 24)
-          : Icon(icon, color: const Color.fromARGB(255, 2, 31, 56)),
-      label: Text(text, style: const TextStyle(color: Colors.black)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,27 +129,11 @@ class SignInScreenState extends State<SignInScreen> {
                   ],
                 ),
                 const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Perform login action
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700),
-                  ),
-                ),
+                buildButton("LOGIN", () {
+                  if (_formKey.currentState!.validate()) {
+                    // Perform registration action
+                  }
+                }),
                 const SizedBox(height: 40),
                 Row(
                   children: [
@@ -180,19 +150,16 @@ class SignInScreenState extends State<SignInScreen> {
                   ],
                 ),
                 const SizedBox(height: 40),
-                buildButton(
-                  'Continue Anonymously',
-                  () {},
-                  color: secColor, // Pale blue color
-                  icon: Icons.person_outline,
-                ),
+                buildButton('Continue Anonymously', () {},
+                    color: secColor,
+                    icon: Icons.person_outline,
+                    textColor: Colors.black,
+                    fontWeight: FontWeight.w400),
                 const SizedBox(height: 20),
-                buildButton(
-                  'Continue with Google',
-                  () {},
-                  color: secColor, // Pale blue color
-                  asset: 'assets/signin/google.png',
-                ),
+                buildButton('Continue with Google', () {},
+                    color: secColor,
+                    asset: 'assets/signin/google.png',
+                    fontWeight: FontWeight.w400),
                 const SizedBox(height: 40),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -201,7 +168,7 @@ class SignInScreenState extends State<SignInScreen> {
                     TextButton(
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => const RegisterScreen()),
+                            builder: (context) => RegisterScreen()),
                       ),
                       child: const Text('Sign Up'),
                     ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notesync/screen/authenticate/sign_in_screen.dart';
 
+import 'shared_methods.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -14,22 +16,8 @@ class RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
-
-  Widget buildButton(String text, VoidCallback onPressed,
-      {Color color = Colors.grey, String? asset, IconData? icon}) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: asset != null
-          ? Image.asset(asset, height: 24, width: 24)
-          : Icon(icon, color: const Color.fromARGB(255, 2, 31, 56)),
-      label: Text(text, style: const TextStyle(color: Colors.black)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      ),
-    );
-  }
+  Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
+  Color secColor = const Color.fromRGBO(33, 133, 176, 0.3);
 
   @override
   Widget build(BuildContext context) {
@@ -54,30 +42,30 @@ class RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Create Account',
+                Text(
+                  'Welcome!',
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color: primaryColor,
                   ),
                 ),
                 const SizedBox(height: 5),
                 const Text(
-                  'Sign up to get started',
-                  style: TextStyle(fontSize: 21, color: Colors.grey),
+                  'Register to get started',
+                  style: TextStyle(fontSize: 20, color: Colors.grey),
                 ),
                 const SizedBox(height: 30),
                 // Name Field
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Name',
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 3),
+                      borderSide: BorderSide(color: primaryColor, width: 3),
                     ),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 3),
+                      borderSide: BorderSide(color: primaryColor, width: 3),
                     ),
                   ),
                   validator: (value) {
@@ -91,13 +79,13 @@ class RegisterScreenState extends State<RegisterScreen> {
                 // Email Field
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Email Address',
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 3),
+                      borderSide: BorderSide(color: primaryColor, width: 3),
                     ),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 3),
+                      borderSide: BorderSide(color: primaryColor, width: 3),
                     ),
                   ),
                   validator: (value) {
@@ -114,17 +102,17 @@ class RegisterScreenState extends State<RegisterScreen> {
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 3),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: primaryColor, width: 3),
                     ),
-                    focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 3),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: primaryColor, width: 3),
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(_obscurePassword
                           ? Icons.visibility
                           : Icons.visibility_off),
-                      color: Colors.blue,
+                      color: primaryColor,
                       onPressed: () {
                         setState(() {
                           _obscurePassword = !_obscurePassword;
@@ -141,21 +129,11 @@ class RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 30),
                 // Register Button
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Perform registration action
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  child: const Text('Register'),
-                ),
+                buildButton("REGISTER", () {
+                  if (_formKey.currentState!.validate()) {
+                    // Perform registration action
+                  }
+                }),
                 const SizedBox(height: 30),
                 Row(
                   children: [
@@ -173,19 +151,18 @@ class RegisterScreenState extends State<RegisterScreen> {
                 ),
 
                 const SizedBox(height: 30),
-                buildButton(
-                  'Continue Anonymously',
-                  () {},
-                  color: Colors.blue.shade100, // Pale blue color
-                  icon: Icons.person_outline,
-                ),
+                buildButton('Continue Anonymously', () {},
+                    color: secColor,
+                    icon: Icons.person_outline,
+                    textColor: Colors.black,
+                    fontWeight: FontWeight.w400),
+
                 const SizedBox(height: 20),
-                buildButton(
-                  'Continue with Google',
-                  () {},
-                  color: Colors.blue.shade100, // Pale blue color
-                  asset: 'assets/signin/google.png',
-                ),
+                buildButton('Continue with Google', () {},
+                    color: secColor,
+                    asset: 'assets/signin/google.png',
+                    fontWeight: FontWeight.w400),
+
                 const SizedBox(height: 40),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
