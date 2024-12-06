@@ -30,18 +30,7 @@ class RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => Navigator.pop(context),
-                      iconSize: 35,
-                    ),
-                    const Icon(Icons.dark_mode),
-                  ],
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 Text(
                   'Welcome!',
                   style: TextStyle(
@@ -134,7 +123,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                     // Perform registration action
                   }
                 }),
-                const SizedBox(height: 30),
+                const SizedBox(height: 40),
                 Row(
                   children: [
                     Expanded(
@@ -150,7 +139,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 40),
                 buildButton('Continue Anonymously', () {},
                     color: secColor,
                     icon: Icons.person_outline,

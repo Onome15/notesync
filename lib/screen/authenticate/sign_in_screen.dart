@@ -30,18 +30,7 @@ class SignInScreenState extends State<SignInScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => Navigator.pop(context),
-                      iconSize: 35,
-                    ),
-                    const Icon(Icons.dark_mode),
-                  ],
-                ),
-                const SizedBox(height: 35),
+                const SizedBox(height: 45),
                 Text(
                   'Welcome!',
                   style: TextStyle(
@@ -170,7 +159,7 @@ class SignInScreenState extends State<SignInScreen> {
                         MaterialPageRoute(
                             builder: (context) => RegisterScreen()),
                       ),
-                      child: const Text('Sign Up'),
+                      child: const Text('Register'),
                     ),
                   ],
                 ),
