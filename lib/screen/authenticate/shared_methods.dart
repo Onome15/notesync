@@ -6,7 +6,6 @@ Widget buildButton(
   Color color = const Color.fromRGBO(33, 133, 176, 1),
   String? asset,
   IconData? icon,
-  Color textColor = Colors.white,
   FontWeight fontWeight = FontWeight.w700,
 }) {
   return ElevatedButton.icon(
@@ -19,7 +18,7 @@ Widget buildButton(
     label: Text(
       text,
       style: TextStyle(
-        color: textColor,
+        color: Colors.white,
         fontWeight: fontWeight,
       ),
     ),

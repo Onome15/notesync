@@ -5,7 +5,6 @@ import 'package:notesync/screen/wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth.dart';
 import '../../shared/constants.dart';
-import '../../provider/theme_provider.dart';
 import '../authenticate/shared_methods.dart';
 
 class LandingPage extends ConsumerWidget {

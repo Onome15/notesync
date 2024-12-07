@@ -23,7 +23,7 @@ class RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(25, 30, 25, 5),
+        padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -39,12 +39,12 @@ class RegisterScreenState extends State<RegisterScreen> {
                     color: primaryColor,
                   ),
                 ),
-                const SizedBox(height: 5),
+
                 const Text(
                   'Register to get started',
                   style: TextStyle(fontSize: 20, color: Colors.grey),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 40),
                 // Name Field
                 TextFormField(
                   controller: _nameController,
@@ -64,7 +64,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 // Email Field
                 TextFormField(
                   controller: _emailController,
@@ -77,6 +77,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                       borderSide: BorderSide(color: primaryColor, width: 3),
                     ),
                   ),
+                  keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
@@ -84,7 +85,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 // Password Field
                 TextFormField(
                   controller: _passwordController,
@@ -123,7 +124,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                     // Perform registration action
                   }
                 }),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
                 Row(
                   children: [
                     Expanded(
@@ -139,20 +140,19 @@ class RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
                 buildButton('Continue Anonymously', () {},
                     color: secColor,
                     icon: Icons.person_outline,
-                    textColor: Colors.black,
-                    fontWeight: FontWeight.w400),
+                    fontWeight: FontWeight.w600),
 
                 const SizedBox(height: 20),
                 buildButton('Continue with Google', () {},
                     color: secColor,
                     asset: 'assets/signin/google.png',
-                    fontWeight: FontWeight.w400),
+                    fontWeight: FontWeight.w600),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

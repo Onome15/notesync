@@ -23,14 +23,14 @@ class SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(25, 40, 25, 5),
+        padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 45),
+                const SizedBox(height: 40),
                 Text(
                   'Welcome!',
                   style: TextStyle(
@@ -39,12 +39,11 @@ class SignInScreenState extends State<SignInScreen> {
                     color: primaryColor,
                   ),
                 ),
-                const SizedBox(height: 5),
                 const Text(
                   'Sign in to continue',
                   style: TextStyle(fontSize: 21, color: Colors.grey),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 40),
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -56,6 +55,7 @@ class SignInScreenState extends State<SignInScreen> {
                       borderSide: BorderSide(color: primaryColor, width: 3),
                     ),
                   ),
+                  keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
@@ -63,7 +63,7 @@ class SignInScreenState extends State<SignInScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
@@ -117,13 +117,13 @@ class SignInScreenState extends State<SignInScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 buildButton("LOGIN", () {
                   if (_formKey.currentState!.validate()) {
                     // Perform registration action
                   }
                 }),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
                 Row(
                   children: [
                     Expanded(
@@ -138,18 +138,17 @@ class SignInScreenState extends State<SignInScreen> {
                             Divider(thickness: 3, color: Colors.grey.shade400)),
                   ],
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
                 buildButton('Continue Anonymously', () {},
                     color: secColor,
-                    icon: Icons.person_outline,
-                    textColor: Colors.black,
-                    fontWeight: FontWeight.w400),
+                    icon: Icons.person,
+                    fontWeight: FontWeight.w600),
                 const SizedBox(height: 20),
                 buildButton('Continue with Google', () {},
                     color: secColor,
                     asset: 'assets/signin/google.png',
-                    fontWeight: FontWeight.w400),
-                const SizedBox(height: 40),
+                    fontWeight: FontWeight.w600),
+                const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
