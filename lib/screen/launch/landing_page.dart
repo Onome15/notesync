@@ -40,7 +40,7 @@ class LandingPage extends ConsumerWidget {
             children: [
               headerWithIcon(),
               SvgPicture.asset(
-                'assets/landing_page/writing.svg',
+                'assets/landing_page/image.svg',
                 height: 300,
               ),
               const Text(
