@@ -1,26 +1,28 @@
+import 'package:notesync/screen/authenticate/sign_in_screen.dart';
+
 import 'package:flutter/material.dart';
 
 import 'register_screen.dart';
-import 'sign_in_screen.dart';
 
 class Authenticate extends StatefulWidget {
-  const Authenticate({super.key});
+  bool showSignIn;
+  Authenticate({super.key, required this.showSignIn});
 
   @override
   State<Authenticate> createState() => _AuthenticateState();
 }
 
 class _AuthenticateState extends State<Authenticate> {
-  bool showSignIn = true;
-
   void toggleView() {
     setState(() {
-      showSignIn = !showSignIn;
+      widget.showSignIn = !widget.showSignIn;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return showSignIn ? const SignInScreen() : const RegisterScreen();
+    return widget.showSignIn
+        ? SignInScreen(onToggleView: toggleView)
+        : RegisterScreen(onToggleView: toggleView);
   }
 }

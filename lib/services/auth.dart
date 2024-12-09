@@ -6,7 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthService extends StateNotifier<bool> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId:
+        '46828394961-h99g2u0ech8chnt5bhg12nknilvmi4dl.apps.googleusercontent.com.apps.googleusercontent.com',
+  );
 
   AuthService() : super(false);
 

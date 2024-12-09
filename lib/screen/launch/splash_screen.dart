@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:notesync/screen/Home/home_page.dart';
+import 'package:notesync/screen/authenticate/register_screen.dart';
+import 'package:notesync/screen/authenticate/sign_in_screen.dart';
+import 'package:notesync/screen/wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart'; // Import SpinKit
 // import '../wrapper.dart';
 import '../../shared/constants.dart';
-import '../wrapper.dart';
 import 'landing_page.dart'; // Ensure correct import
 
 class SplashScreen extends StatefulWidget {
@@ -20,14 +23,22 @@ class SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     // Delay for 3 seconds before navigating
-    Future.delayed(const Duration(seconds: 3), () async {
+    Future.delayed(const Duration(seconds: 1), () async {
       final prefs = await SharedPreferences.getInstance();
       final hasSeenLandingPage = prefs.getBool('hasSeenLandingPage') ?? false;
 
       if (!hasSeenLandingPage) {
-        _navigateWithFade(const LandingPage());
+        if (mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const LandingPage()),
+          );
+        }
       } else {
-        _navigateWithFade(const LandingPage());
+        if (mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const LandingPage()),
+          );
+        }
       }
     });
   }
@@ -48,8 +59,6 @@ class SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = Theme.of(context).colorScheme.primary;
-
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:notesync/screen/authenticate/register_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../services/auth.dart';
 import 'shared_methods.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class SignInScreen extends ConsumerStatefulWidget {
+  final VoidCallback onToggleView;
+
+  const SignInScreen({super.key, required this.onToggleView});
 
   @override
-  SignInScreenState createState() => SignInScreenState();
+  ConsumerState<SignInScreen> createState() => SignInScreenState();
 }
 
-class SignInScreenState extends State<SignInScreen> {
+class SignInScreenState extends ConsumerState<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -21,6 +25,8 @@ class SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = ref.read(authServiceProvider.notifier);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -118,9 +124,12 @@ class SignInScreenState extends State<SignInScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                buildButton("LOGIN", () {
+                buildButton("LOGIN", () async {
                   if (_formKey.currentState!.validate()) {
-                    // Perform registration action
+                    await authService.signInWithEmailAndPassword(
+                      _emailController.text.trim(),
+                      _passwordController.text.trim(),
+                    );
                   }
                 }),
                 const SizedBox(height: 30),
@@ -139,12 +148,16 @@ class SignInScreenState extends State<SignInScreen> {
                   ],
                 ),
                 const SizedBox(height: 30),
-                buildButton('Continue Anonymously', () {},
+                buildButton('Continue Anonymously', () async {
+                  await authService.signInAnon();
+                },
                     color: secColor,
                     icon: Icons.person,
                     fontWeight: FontWeight.w600),
                 const SizedBox(height: 20),
-                buildButton('Continue with Google', () {},
+                buildButton('Continue with Google', () async {
+                  await authService.signInWithGoogle();
+                },
                     color: secColor,
                     asset: 'assets/signin/google.png',
                     fontWeight: FontWeight.w600),
@@ -154,10 +167,7 @@ class SignInScreenState extends State<SignInScreen> {
                   children: [
                     const Text('Don’t have an account?'),
                     TextButton(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => RegisterScreen()),
-                      ),
+                      onPressed: widget.onToggleView,
                       child: const Text('Register'),
                     ),
                   ],

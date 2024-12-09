@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:notesync/screen/authenticate/sign_in_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../services/auth.dart';
 import 'shared_methods.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class RegisterScreen extends ConsumerStatefulWidget {
+  final VoidCallback onToggleView;
+
+  const RegisterScreen({super.key, required this.onToggleView});
 
   @override
-  RegisterScreenState createState() => RegisterScreenState();
+  ConsumerState<RegisterScreen> createState() => RegisterScreenState();
 }
 
-class RegisterScreenState extends State<RegisterScreen> {
+class RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -21,6 +25,8 @@ class RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = ref.read(authServiceProvider.notifier);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -118,10 +124,14 @@ class RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
                 const SizedBox(height: 30),
-                // Register Button
-                buildButton("REGISTER", () {
+
+                buildButton("REGISTER", () async {
                   if (_formKey.currentState!.validate()) {
-                    // Perform registration action
+                    await authService.registerWithEmailAndPassword(
+                      _emailController.text.trim(),
+                      _passwordController.text.trim(),
+                      _nameController.text.trim(),
+                    );
                   }
                 }),
                 const SizedBox(height: 30),
@@ -141,7 +151,9 @@ class RegisterScreenState extends State<RegisterScreen> {
                 ),
 
                 const SizedBox(height: 30),
-                buildButton('Continue Anonymously', () {},
+                buildButton('Continue Anonymously', () async {
+                  await authService.signInAnon();
+                },
                     color: secColor,
                     icon: Icons.person_outline,
                     fontWeight: FontWeight.w600),
@@ -158,10 +170,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                   children: [
                     const Text('Don’t have an account?'),
                     TextButton(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => const SignInScreen()),
-                      ),
+                      onPressed: widget.onToggleView,
                       child: const Text('Login'),
                     ),
                   ],

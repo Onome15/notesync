@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
+  <!-- Firebase Authentication (if you're using it) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
 
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+  <!-- Firebase Firestore (if you're using it) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
 
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
+  <!-- Firebase Analytics (if you're using it) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics.js"></script>
+
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
@@ -33,6 +32,23 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <!-- Firebase Configuration -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBPebubw3ngUY54jaVmUtiW-smEf2HL1ZE",
+      authDomain: "notesync-aca8f.firebaseapp.com",
+      projectId: "notesync-aca8f",
+      storageBucket: "notesync-aca8f.appspot.com",
+      messagingSenderId: "46828394961",
+      appId: "1:46828394961:web:522146bb7cd590a336e8f0",
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+
+  </script>
+
+  <!-- Flutter Web Bootstrap -->
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

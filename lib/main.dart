@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:notesync/screen/launch/splash_screen.dart';
+import 'package:notesync/screen/wrapper.dart';
 import 'firebase_options.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,11 +20,13 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-
-      // Start with SplashScreen
-      home: SplashScreen(),
+      theme: ThemeData(
+        fontFamily:
+            GoogleFonts.cantarell().fontFamily, // Set global font family
+      ),
+      home: const SplashScreen(),
     );
   }
 }

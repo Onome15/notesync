@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:notesync/screen/wrapper.dart';
+import 'package:notesync/screen/authenticate/authenticate.dart';
+import 'package:notesync/screen/authenticate/sign_in_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../services/auth.dart';
 import '../../shared/constants.dart';
+import '../authenticate/register_screen.dart';
 import '../authenticate/shared_methods.dart';
 
 class LandingPage extends ConsumerWidget {
@@ -39,7 +40,7 @@ class LandingPage extends ConsumerWidget {
             children: [
               headerWithIcon(),
               SvgPicture.asset(
-                'assets/landing_page/image.svg',
+                'assets/landing_page/vector_image.svg',
                 height: 300,
               ),
               const Text(
@@ -56,7 +57,7 @@ class LandingPage extends ConsumerWidget {
                 textAlign: TextAlign.center,
               ),
               buildButton("Get Started", () {
-                _navigateWithFade(context, const Wrapper());
+                _navigateWithFade(context, Authenticate(showSignIn: false));
               }),
             ],
           ),

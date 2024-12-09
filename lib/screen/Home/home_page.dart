@@ -7,7 +7,6 @@ import '../../shared/loading.dart';
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
-  /// Shows a confirmation dialog for logging out
   Future<void> _showLogoutConfirmationDialog(
       BuildContext context, WidgetRef ref) async {
     final authService = ref.read(authServiceProvider.notifier);
