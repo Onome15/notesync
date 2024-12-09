@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notesync/screen/authenticate/register_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../services/auth.dart';
+import '../../shared/loading.dart';
 import 'forget_password.dart';
 import 'shared_methods.dart';
 
@@ -27,163 +27,172 @@ class SignInScreenState extends ConsumerState<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     final authService = ref.read(authServiceProvider.notifier);
+    final isLoading = ref.watch(authServiceProvider); // Watch loading state
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 40),
-                Text(
-                  'Welcome!',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: primaryColor,
-                  ),
-                ),
-                const Text(
-                  'Sign in to continue',
-                  style: TextStyle(fontSize: 21, color: Colors.grey),
-                ),
-                const SizedBox(height: 40),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email Address',
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: primaryColor, width: 3),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 40),
+                    Text(
+                      'Welcome!',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: primaryColor,
+                      ),
                     ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: primaryColor, width: 3),
+                    const Text(
+                      'Sign in to continue',
+                      style: TextStyle(fontSize: 21, color: Colors.grey),
                     ),
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: primaryColor, width: 3),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: primaryColor, width: 3),
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(_obscurePassword
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                      color: primaryColor,
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
+                    const SizedBox(height: 40),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email Address',
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: primaryColor, width: 3),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: primaryColor, width: 3),
+                        ),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        return null;
                       },
                     ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Radio(
-                          value: true,
-                          groupValue: _rememberMe,
-                          onChanged: (value) {
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: primaryColor, width: 3),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: primaryColor, width: 3),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(_obscurePassword
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          color: primaryColor,
+                          onPressed: () {
                             setState(() {
-                              _rememberMe = value as bool;
+                              _obscurePassword = !_obscurePassword;
                             });
                           },
                         ),
-                        const Text('Remember Me'),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Radio(
+                              value: true,
+                              groupValue: _rememberMe,
+                              onChanged: (value) {
+                                setState(() {
+                                  _rememberMe = value as bool;
+                                });
+                              },
+                            ),
+                            const Text('Remember Me'),
+                          ],
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordPage(),
+                              ),
+                            );
+                          },
+                          child: const Text('Forgot Password?'),
+                        ),
                       ],
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ForgotPasswordPage(),
-                          ),
+                    const SizedBox(height: 20),
+                    buildButton("LOGIN", () async {
+                      if (_formKey.currentState!.validate()) {
+                        await authService.signInWithEmailAndPassword(
+                          _emailController.text.trim(),
+                          _passwordController.text.trim(),
                         );
-                      },
-                      child: const Text('Forgot Password?'),
+                      }
+                    }),
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Divider(
+                                thickness: 3, color: Colors.grey.shade400)),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child:
+                              Text("OR", style: TextStyle(color: Colors.grey)),
+                        ),
+                        Expanded(
+                            child: Divider(
+                                thickness: 3, color: Colors.grey.shade400)),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    buildButton('Continue Anonymously', () async {
+                      await authService.signInAnon();
+                    },
+                        color: secColor,
+                        icon: Icons.person,
+                        fontWeight: FontWeight.w600),
+                    const SizedBox(height: 20),
+                    buildButton('Continue with Google', () async {
+                      await authService.signInWithGoogle();
+                    },
+                        color: secColor,
+                        asset: 'assets/signin/google.png',
+                        fontWeight: FontWeight.w600),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Don’t have an account?'),
+                        TextButton(
+                          onPressed: widget.onToggleView,
+                          child: const Text('Register'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                buildButton("LOGIN", () async {
-                  if (_formKey.currentState!.validate()) {
-                    await authService.signInWithEmailAndPassword(
-                      _emailController.text.trim(),
-                      _passwordController.text.trim(),
-                    );
-                  }
-                }),
-                const SizedBox(height: 30),
-                Row(
-                  children: [
-                    Expanded(
-                        child:
-                            Divider(thickness: 3, color: Colors.grey.shade400)),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text("OR", style: TextStyle(color: Colors.grey)),
-                    ),
-                    Expanded(
-                        child:
-                            Divider(thickness: 3, color: Colors.grey.shade400)),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                buildButton('Continue Anonymously', () async {
-                  await authService.signInAnon();
-                },
-                    color: secColor,
-                    icon: Icons.person,
-                    fontWeight: FontWeight.w600),
-                const SizedBox(height: 20),
-                buildButton('Continue with Google', () async {
-                  await authService.signInWithGoogle();
-                },
-                    color: secColor,
-                    asset: 'assets/signin/google.png',
-                    fontWeight: FontWeight.w600),
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Don’t have an account?'),
-                    TextButton(
-                      onPressed: widget.onToggleView,
-                      child: const Text('Register'),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          // Overlay loading spinner
+          if (isLoading) const Loading(),
+        ],
       ),
     );
   }

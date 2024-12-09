@@ -138,6 +138,7 @@ class AuthService extends StateNotifier<bool> {
   /// Send a password reset email
   Future<void> sendPasswordResetEmail(
       String email, BuildContext context) async {
+    state = true;
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
       showToast(message: "Password reset email sent. Check your inbox.");
@@ -145,6 +146,7 @@ class AuthService extends StateNotifier<bool> {
       await Future.delayed(const Duration(seconds: 3));
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
+      state = false;
       if (e.code == 'invalid-email') {
         showToast(message: "Invalid email address.");
       } else if (e.code == 'user-not-found') {
@@ -153,6 +155,7 @@ class AuthService extends StateNotifier<bool> {
         showToast(message: "An error occurred: ${e.message}");
       }
     } catch (e) {
+      state = false;
       showToast(message: "An unknown error occurred: $e");
     }
   }
