@@ -28,17 +28,9 @@ class SplashScreenState extends State<SplashScreen> {
       final hasSeenLandingPage = prefs.getBool('hasSeenLandingPage') ?? false;
 
       if (!hasSeenLandingPage) {
-        if (mounted) {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const LandingPage()),
-          );
-        }
+        _navigateWithFade(const LandingPage());
       } else {
-        if (mounted) {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const LandingPage()),
-          );
-        }
+        _navigateWithFade(const Wrapper(showSignIn: true));
       }
     });
   }

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:notesync/screen/authenticate/authenticate.dart';
-import 'package:notesync/screen/authenticate/sign_in_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/constants.dart';
-import '../authenticate/register_screen.dart';
 import '../authenticate/shared_methods.dart';
+import '../wrapper.dart';
 
 class LandingPage extends ConsumerWidget {
   const LandingPage({super.key});
@@ -16,7 +15,7 @@ class LandingPage extends ConsumerWidget {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('hasSeenLandingPage', true);
 
-    Navigator.of(context).pushReplacement(
+    Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => destination,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -57,7 +56,7 @@ class LandingPage extends ConsumerWidget {
                 textAlign: TextAlign.center,
               ),
               buildButton("Get Started", () {
-                _navigateWithFade(context, Authenticate(showSignIn: false));
+                _navigateWithFade(context, const Wrapper(showSignIn: false));
               }),
             ],
           ),

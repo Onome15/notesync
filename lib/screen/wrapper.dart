@@ -1,17 +1,36 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notesync/screen/authenticate/authenticate.dart';
 import 'package:notesync/screen/authenticate/register_screen.dart';
 import '../services/auth.dart';
 import 'Home/home_page.dart';
 import 'authenticate/sign_in_screen.dart';
 
-class Wrapper extends ConsumerWidget {
-  const Wrapper({super.key});
+class Wrapper extends ConsumerStatefulWidget {
+  final bool showSignIn;
+
+  const Wrapper({super.key, required this.showSignIn});
+  @override
+  ConsumerState<Wrapper> createState() => WrapperState();
+}
+
+class WrapperState extends ConsumerState<Wrapper> {
+  late bool showSignIn;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    showSignIn = widget.showSignIn;
+  }
+
+  void toggleView() {
+    setState(() {
+      showSignIn = !showSignIn;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final authService = ref.read(authServiceProvider.notifier);
 
     return StreamBuilder<User?>(
@@ -22,9 +41,9 @@ class Wrapper extends ConsumerWidget {
         } else if (snapshot.hasData) {
           return const HomePage();
         } else {
-          return Authenticate(
-            showSignIn: true,
-          );
+          return showSignIn
+              ? SignInScreen(onToggleView: toggleView)
+              : RegisterScreen(onToggleView: toggleView);
         }
       },
     );
