@@ -3,6 +3,7 @@ import 'package:notesync/screen/authenticate/register_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/auth.dart';
+import 'forget_password.dart';
 import 'shared_methods.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
@@ -118,7 +119,14 @@ class SignInScreenState extends ConsumerState<SignInScreen> {
                       ],
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordPage(),
+                          ),
+                        );
+                      },
                       child: const Text('Forgot Password?'),
                     ),
                   ],
