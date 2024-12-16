@@ -50,7 +50,7 @@ Widget menu(BuildContext context, ref) {
             ),
             const PopupMenuItem(
               value: 'private',
-              child: Text('private'),
+              child: Text('Private'),
             ),
             const PopupMenuItem(
               value: 'logout',

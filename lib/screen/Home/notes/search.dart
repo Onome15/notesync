@@ -32,8 +32,11 @@ class NotesSearchState extends State<NotesSearch> {
               },
               textInputAction: TextInputAction.search,
               decoration: textInputDecoration.copyWith(
-                prefixIcon: const Icon(Icons.search),
-                hintText: "Search notes",
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: primaryColor,
+                ),
+                hintText: "Search Notes",
               )),
           const SizedBox(height: 20),
           // Toggle Menu

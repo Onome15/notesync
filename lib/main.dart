@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: GoogleFonts.cantarell().fontFamily,
       ),
-      home: const HomePage(),
+      home: const SplashScreen(),
     );
   }
 }

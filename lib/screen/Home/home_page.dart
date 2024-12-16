@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Assuming you're using Riverpod
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notesync/screen/Home/Header/menu.dart';
 import 'package:notesync/screen/Home/Header/title.dart';
-
 import 'add_notes.dart';
 import 'notes/search.dart';
 
@@ -12,7 +11,8 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
-    Color secColor = const Color.fromRGBO(33, 133, 176, 0.3);
+    // Color secColor = const Color.fromRGBO(33, 133, 176, 0.3);
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
@@ -25,26 +25,22 @@ class HomePage extends ConsumerWidget {
           size: 50,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  const Header(),
-                  const Spacer(), // Pushes the button to the opposite side
-                  menu(context, ref),
-                ],
-              ),
-              const SizedBox(height: 25),
-              const SizedBox(
-                height: 400,
-                child: NotesSearch(),
-              ),
-              const SizedBox(height: 30),
-            ],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const Header(),
+                const Spacer(),
+                menu(context, ref),
+              ],
+            ),
+            const SizedBox(height: 25),
+            const Expanded(
+              child: NotesSearch(),
+            ),
+          ],
         ),
       ),
     );
