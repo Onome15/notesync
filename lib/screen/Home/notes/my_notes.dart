@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
-class MyNotes extends StatelessWidget {
+class MyNotes extends StatefulWidget {
   final String searchQuery; // Accepts the search query
 
   const MyNotes({super.key, required this.searchQuery});
 
+  @override
+  State<MyNotes> createState() => _MyNotesState();
+}
+
+class _MyNotesState extends State<MyNotes> {
   @override
   Widget build(BuildContext context) {
     Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
@@ -24,7 +29,7 @@ class MyNotes extends StatelessWidget {
     // Filter notes based on the search query (searching titles only)
     final filteredNotes = notes.entries
         .where((entry) =>
-            entry.key.toLowerCase().contains(searchQuery.toLowerCase()))
+            entry.key.toLowerCase().contains(widget.searchQuery.toLowerCase()))
         .toList();
 
     return filteredNotes.isNotEmpty

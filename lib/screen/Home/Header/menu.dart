@@ -14,12 +14,12 @@ Widget menu(BuildContext context, ref) {
         if (value == 'profile') {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const Private()),
+            MaterialPageRoute(builder: (context) => const Profile()),
           );
         } else if (value == 'private') {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const Profile()),
+            MaterialPageRoute(builder: (context) => const PrivatePage()),
           );
         } else if (value == 'logout') {
           showLogoutConfirmationDialog(context, ref);
