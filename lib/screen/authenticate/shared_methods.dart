@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
+
 Widget buildButton(
   String text,
   VoidCallback onPressed, {
@@ -29,3 +31,12 @@ Widget buildButton(
     ),
   );
 }
+
+final textInputDecoration = InputDecoration(
+  enabledBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: primaryColor, width: 3),
+  ),
+  focusedBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: primaryColor, width: 3),
+  ),
+);

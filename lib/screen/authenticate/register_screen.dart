@@ -57,14 +57,12 @@ class RegisterScreenState extends ConsumerState<RegisterScreen> {
                   // Name Field
                   TextFormField(
                     controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Name',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: primaryColor, width: 3),
+                    decoration: textInputDecoration.copyWith(
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: primaryColor,
                       ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: primaryColor, width: 3),
-                      ),
+                      labelText: 'Fullname',
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -77,14 +75,12 @@ class RegisterScreenState extends ConsumerState<RegisterScreen> {
                   // Email Field
                   TextFormField(
                     controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email Address',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: primaryColor, width: 3),
+                    decoration: textInputDecoration.copyWith(
+                      prefixIcon: Icon(
+                        Icons.email,
+                        color: primaryColor,
                       ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: primaryColor, width: 3),
-                      ),
+                      labelText: 'Email',
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
@@ -99,14 +95,12 @@ class RegisterScreenState extends ConsumerState<RegisterScreen> {
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
-                    decoration: InputDecoration(
+                    decoration: textInputDecoration.copyWith(
+                      prefixIcon: Icon(
+                        Icons.lock,
+                        color: primaryColor,
+                      ),
                       labelText: 'Password',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: primaryColor, width: 3),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: primaryColor, width: 3),
-                      ),
                       suffixIcon: IconButton(
                         icon: Icon(_obscurePassword
                             ? Icons.visibility

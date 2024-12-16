@@ -56,14 +56,12 @@ class SignInScreenState extends ConsumerState<SignInScreen> {
                     const SizedBox(height: 40),
                     TextFormField(
                       controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email Address',
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: primaryColor, width: 3),
+                      decoration: textInputDecoration.copyWith(
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: primaryColor,
                         ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: primaryColor, width: 3),
-                        ),
+                        labelText: 'Email',
                       ),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
@@ -77,14 +75,12 @@ class SignInScreenState extends ConsumerState<SignInScreen> {
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
-                      decoration: InputDecoration(
+                      decoration: textInputDecoration.copyWith(
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: primaryColor,
+                        ),
                         labelText: 'Password',
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: primaryColor, width: 3),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: primaryColor, width: 3),
-                        ),
                         suffixIcon: IconButton(
                           icon: Icon(_obscurePassword
                               ? Icons.visibility

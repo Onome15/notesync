@@ -172,21 +172,7 @@ class AuthService extends StateNotifier<bool> {
 
   /// Get the current logged-in user
   Future<User?> getCurrentUser() async {
-    final User? currentUser = _firebaseAuth.currentUser;
-
-    if (currentUser != null) {
-      try {
-        await currentUser.reload(); // Refresh user data from Firebase
-        // Add a longer delay to make sure Firebase has time to update the data
-        await Future.delayed(const Duration(seconds: 1));
-        return _firebaseAuth
-            .currentUser; // Re-fetch the current user to ensure updated data
-      } catch (e) {
-        return null;
-      }
-    }
-
-    return null; // If no user is logged in
+    return _firebaseAuth.currentUser;
   }
 
   /// Listen for authentication state changes

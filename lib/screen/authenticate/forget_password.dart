@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notesync/shared/toast.dart';
 import '../../services/auth.dart';
 import '../../shared/loading.dart';
 import '../authenticate/shared_methods.dart';
@@ -52,14 +51,12 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                   const SizedBox(height: 40),
                   TextFormField(
                     controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email Address',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: primaryColor, width: 3),
+                    decoration: textInputDecoration.copyWith(
+                      prefixIcon: Icon(
+                        Icons.email,
+                        color: primaryColor,
                       ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: primaryColor, width: 3),
-                      ),
+                      labelText: 'Email',
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {

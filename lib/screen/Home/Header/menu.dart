@@ -1,0 +1,59 @@
+//profile page
+//private page
+//logout page
+
+import 'package:flutter/material.dart';
+import 'package:notesync/screen/Home/Header/logout.dart';
+import 'package:notesync/screen/Home/Header/profile.dart';
+import 'package:notesync/screen/Home/private.dart';
+
+Widget menu(BuildContext context, ref) {
+  return PopupMenuButton<String>(
+      onSelected: (value) {
+        if (value == 'profile') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Private()),
+          );
+        } else if (value == 'private') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Profile()),
+          );
+        } else if (value == 'logout') {
+          showLogoutConfirmationDialog(context, ref);
+        }
+      },
+      icon: GestureDetector(
+        child: ClipOval(
+          child: Image.asset(
+            'assets/signin/googe.png', // Replace with dynamic path
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              // Fallback to an icon if image loading fails
+              return const Icon(
+                Icons.person,
+                size: 50,
+                color: Colors.grey,
+              );
+            },
+          ),
+        ),
+      ),
+      itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'profile',
+              child: Text('Profile'),
+            ),
+            const PopupMenuItem(
+              value: 'private',
+              child: Text('private'),
+            ),
+            const PopupMenuItem(
+              value: 'logout',
+              child: Text('Logout'),
+            ),
+          ]);
+}
