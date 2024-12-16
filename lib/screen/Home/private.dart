@@ -46,6 +46,15 @@ class _PrivatePageState extends State<PrivatePage> {
     });
   }
 
+  Future<void> _resetPin() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('private_pin');
+    setState(() {
+      _savedPin = null;
+      _isPinSet = false;
+    });
+  }
+
   String _collectPin(List<TextEditingController> controllers) {
     return controllers.map((controller) => controller.text).join();
   }
@@ -105,11 +114,44 @@ class _PrivatePageState extends State<PrivatePage> {
     );
   }
 
+  void _showResetConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Reset PIN"),
+        content: const Text(
+            "Are you sure you want to reset your PIN? This action cannot be undone."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _resetPin();
+            },
+            child: const Text("Reset"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Private Notes"),
+        actions: [
+          if (_isPinSet)
+            IconButton(
+              icon: const Icon(Icons.lock_reset),
+              onPressed: _showResetConfirmationDialog,
+            ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -211,7 +253,7 @@ class _PrivatePageState extends State<PrivatePage> {
 }
 
 class NoPrivateNotesPage extends StatelessWidget {
-  const NoPrivateNotesPage({super.key});
+  const NoPrivateNotesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
