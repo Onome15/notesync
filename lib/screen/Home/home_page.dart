@@ -3,17 +3,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Assuming you're usin
 import 'package:notesync/screen/Home/Header/menu.dart';
 import 'package:notesync/screen/Home/Header/title.dart';
 
-import 'search.dart';
+import 'add_notes.dart';
+import 'notes/search.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
+    Color secColor = const Color.fromRGBO(33, 133, 176, 0.3);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AddNotes()),
+        ),
+        child: Icon(
+          Icons.add,
+          color: primaryColor,
+          size: 50,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -30,15 +40,7 @@ class HomePage extends ConsumerWidget {
               const SizedBox(height: 25),
               const SizedBox(
                 height: 400,
-                child: NotesSearch(
-                  notes: [
-                    "Meeting notes",
-                    "Shopping list",
-                    "Flutter tutorial ideas",
-                    "Holiday plans",
-                    "Workout schedule",
-                  ],
-                ),
+                child: NotesSearch(),
               ),
               const SizedBox(height: 30),
             ],

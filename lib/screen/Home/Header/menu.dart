@@ -8,6 +8,7 @@ import 'package:notesync/screen/Home/Header/profile.dart';
 import 'package:notesync/screen/Home/private.dart';
 
 Widget menu(BuildContext context, ref) {
+  Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
   return PopupMenuButton<String>(
       onSelected: (value) {
         if (value == 'profile') {
@@ -33,10 +34,10 @@ Widget menu(BuildContext context, ref) {
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               // Fallback to an icon if image loading fails
-              return const Icon(
+              return Icon(
                 Icons.person,
                 size: 50,
-                color: Colors.grey,
+                color: primaryColor,
               );
             },
           ),
