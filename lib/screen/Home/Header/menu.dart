@@ -28,7 +28,7 @@ Widget menu(BuildContext context, ref) {
       icon: GestureDetector(
         child: ClipOval(
           child: Image.asset(
-            'assets/signin/googe.png', // Replace with dynamic path
+            'assets/signin/google.png', // Replace with dynamic path
             width: 50,
             height: 50,
             fit: BoxFit.cover,

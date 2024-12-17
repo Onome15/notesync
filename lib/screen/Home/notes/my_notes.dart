@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'note_detail_page.dart';
+
 class MyNotes extends StatefulWidget {
   final String searchQuery; // Accepts the search query
 
@@ -16,14 +18,12 @@ class _MyNotesState extends State<MyNotes> {
 
     // Example notes map (title as key, body as value)
     final Map<String, String> notes = {
-      "Flutter tutorial ides": "Build a weather app, social media app, etc.",
-      "Holiday plan": "Viit the beach, go hiking, book a hotel.",
-      "Workout schedue": "Monday: Cardio, Tuesday: Strength, etc.",
-      "Meeting notes": "Discuss project updates and deadlines.",
-      "Shopping list": "Milk, Eggs, Bread, Butter, Fruits.",
-      "Flutter tutorial ideas": "Build a weather app, social media app, etc.",
+      "Flutter tutorial ideas":
+          "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?",
       "Holiday plans": "Visit the beach, go hiking, book a hotel.",
       "Workout schedule": "Monday: Cardio, Tuesday: Strength, etc.",
+      "Meeting notes": "Discuss project updates and deadlines.",
+      "Shopping list": "Milk, Eggs, Bread, Butter, Fruits.",
     };
 
     // Filter notes based on the search query (searching titles only)
@@ -41,8 +41,8 @@ class _MyNotesState extends State<MyNotes> {
 
               return Container(
                 margin: const EdgeInsets.only(bottom: 10),
-                padding: const EdgeInsets.only(
-                    top: 5, bottom: 10, left: 10, right: 10),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 decoration: BoxDecoration(
                   border: Border.all(color: primaryColor),
                   borderRadius: BorderRadius.circular(10),
@@ -63,7 +63,15 @@ class _MyNotesState extends State<MyNotes> {
                         ),
                         const Spacer(),
                         OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    NoteDetailPage(title: title, body: body),
+                              ),
+                            );
+                          },
                           style: OutlinedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
@@ -71,7 +79,7 @@ class _MyNotesState extends State<MyNotes> {
                             side: BorderSide(color: primaryColor),
                           ),
                           child: const Text("View"),
-                        )
+                        ),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -79,6 +87,8 @@ class _MyNotesState extends State<MyNotes> {
                       body,
                       style:
                           const TextStyle(fontSize: 14, color: Colors.black87),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis, // Truncate to 2 lines
                     ),
                   ],
                 ),

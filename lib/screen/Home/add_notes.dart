@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:notesync/database/firestore.dart';
 import 'shared_methods.dart';
 import 'package:notesync/shared/toast.dart'; // For showing toast messages
 
@@ -45,6 +46,7 @@ class AddNotesState extends State<AddNotes> {
 
   @override
   Widget build(BuildContext context) {
+    final FirestoreService firestoreService = FirestoreService();
     Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
     Color secColor = const Color.fromRGBO(33, 133, 176, 0.3);
 
@@ -128,13 +130,10 @@ class AddNotesState extends State<AddNotes> {
                   onPressed: _notesController.text.trim().isNotEmpty
                       ? () async {
                           // Save note logic
-                          _note['title'] = _titleController.text.trim();
-                          _note['body'] = _notesController.text.trim();
-                          _note['isPublic'] = _isPublic.toString();
-
-                          // Print the note for debugging
-                          print("Note Saved: $_note");
-                          showToast(message: "Notes added successfully");
+                          String title = _titleController.text.trim();
+                          String body = _notesController.text.trim();
+                          // _note['isPublic'] = _isPublic.toString();
+                          firestoreService.addNotes(title, body);
 
                           await Future.delayed(const Duration(seconds: 1));
                           Navigator.pop(context);

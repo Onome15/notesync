@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'note_detail_page.dart';
+
 class OtherNotes extends StatefulWidget {
   final String searchQuery; // Accepts the search query
 
@@ -63,7 +65,15 @@ class _OtherNotesState extends State<OtherNotes> {
                         ),
                         const Spacer(),
                         OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    NoteDetailPage(title: title, body: body),
+                              ),
+                            );
+                          },
                           style: OutlinedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
@@ -71,7 +81,7 @@ class _OtherNotesState extends State<OtherNotes> {
                             side: BorderSide(color: primaryColor),
                           ),
                           child: const Text("View"),
-                        )
+                        ),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -79,6 +89,8 @@ class _OtherNotesState extends State<OtherNotes> {
                       body,
                       style:
                           const TextStyle(fontSize: 14, color: Colors.black87),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis, // Truncate to 2 lines
                     ),
                   ],
                 ),

@@ -19,6 +19,7 @@ class HomePage extends ConsumerWidget {
           context,
           MaterialPageRoute(builder: (context) => const AddNotes()),
         ),
+        tooltip: "Add notes",
         child: Icon(
           Icons.add,
           color: primaryColor,
