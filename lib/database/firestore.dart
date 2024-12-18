@@ -5,14 +5,14 @@ class FirestoreService {
   final CollectionReference notes =
       FirebaseFirestore.instance.collection('notes');
 
-  //Add Notes To DataBase
+  // Add Notes to Database
   Future<void> addNotes(String title, String body) async {
     try {
+      const defaultTitle = "No Title, Update";
       await notes.add({
-        'title': title,
+        'title': title.isNotEmpty == true ? title : defaultTitle,
         'body': body,
-        'date': DateTime.now().toIso8601String(),
-        'timestamp': FieldValue.serverTimestamp(),
+        'timestamp': FieldValue.serverTimestamp(), // Only use the Timestamp
       });
       showToast(message: "Note added successfully!");
     } catch (e) {
@@ -20,7 +20,41 @@ class FirestoreService {
     }
   }
 
-  //Fetch Notes From DataBase
+  // Fetch Notes From Database
+  Stream<List<Map<String, dynamic>>> fetchNotes() {
+    return notes
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) {
+              return {
+                'id': doc.id,
+                'title': doc['title'],
+                'body': doc['body'],
+                'timestamp': doc['timestamp'], // Fetch the timestamp
+              };
+            }).toList());
+  }
 
-  //Update Notes From DataBase
+  // Update Notes in Database
+  Future<void> updateNote(String id, String title, String body) async {
+    try {
+      await notes.doc(id).update({
+        'title': title,
+        'body': body,
+      });
+      showToast(message: "Note updated successfully!");
+    } catch (e) {
+      showToast(message: "Failed to update note: $e");
+    }
+  }
+
+  // Delete Notes in Database
+  Future<void> deleteNote(String id) async {
+    try {
+      await notes.doc(id).delete();
+      showToast(message: "Note deleted successfully!");
+    } catch (e) {
+      showToast(message: "Failed to delete note: $e");
+    }
+  }
 }

@@ -10,17 +10,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:notesync/database/firestore.dart';
 import 'shared_methods.dart';
-import 'package:notesync/shared/toast.dart'; // For showing toast messages
 
 class AddNotes extends StatefulWidget {
-  const AddNotes({super.key});
+  final String? title;
+  final String? body;
+  final String? id; // ID is optional and used for editing an existing note
+
+  const AddNotes({super.key, this.title, this.body, this.id});
 
   @override
   AddNotesState createState() => AddNotesState();
 }
 
 class AddNotesState extends State<AddNotes> {
-  final Map<String, String> _note = {}; // Map to store the note
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
   bool _isPublic = false; // Checkbox state
@@ -28,6 +30,14 @@ class AddNotesState extends State<AddNotes> {
   @override
   void initState() {
     super.initState();
+
+    // Initialize the text controllers with existing data if available
+    if (widget.title != null && widget.body != null) {
+      _titleController.text = widget.title!;
+      _notesController.text = widget.body!;
+    }
+
+    // Adding a listener to the notes controller to track text changes
     _notesController.addListener(_updateCharacterCountAndSaveState);
   }
 
@@ -38,6 +48,7 @@ class AddNotesState extends State<AddNotes> {
     super.dispose();
   }
 
+  // Function to update UI and handle character count and enabling/disabling the save button
   void _updateCharacterCountAndSaveState() {
     setState(() {
       // Trigger UI update whenever the body field changes
@@ -55,14 +66,14 @@ class AddNotesState extends State<AddNotes> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Notes"),
+        title: Text(widget.id == null ? "Add Notes" : "Edit Notes"),
+        backgroundColor: primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title Field
             TextFormField(
               controller: _titleController,
               decoration: textInputDecoration.copyWith(
@@ -70,7 +81,6 @@ class AddNotesState extends State<AddNotes> {
               ),
             ),
             const SizedBox(height: 8),
-            // Date, Time, and Character Count
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -87,9 +97,7 @@ class AddNotesState extends State<AddNotes> {
                 labelText: "Type your notes here...",
               ),
             ),
-
             const SizedBox(height: 16),
-            // Public Checkbox
             Row(
               children: [
                 Checkbox(
@@ -102,10 +110,9 @@ class AddNotesState extends State<AddNotes> {
                   side: BorderSide(color: secColor),
                   activeColor: primaryColor,
                 ),
-                const Text("Make this note public(Others will see it)"),
+                const Text("Make this note public (Others will see it)"),
               ],
             ),
-
             // Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -129,11 +136,17 @@ class AddNotesState extends State<AddNotes> {
                 ElevatedButton(
                   onPressed: _notesController.text.trim().isNotEmpty
                       ? () async {
-                          // Save note logic
                           String title = _titleController.text.trim();
                           String body = _notesController.text.trim();
-                          // _note['isPublic'] = _isPublic.toString();
-                          firestoreService.addNotes(title, body);
+
+                          if (widget.id == null) {
+                            // Add a new note
+                            firestoreService.addNotes(title, body);
+                          } else {
+                            // Edit an existing note
+                            firestoreService.updateNote(
+                                widget.id!, title, body);
+                          }
 
                           await Future.delayed(const Duration(seconds: 1));
                           Navigator.pop(context);

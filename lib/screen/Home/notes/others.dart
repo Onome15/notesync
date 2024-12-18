@@ -69,8 +69,12 @@ class _OtherNotesState extends State<OtherNotes> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    NoteDetailPage(title: title, body: body),
+                                builder: (context) => NoteDetailPage(
+                                  id: title,
+                                  title: title,
+                                  body: body,
+                                  date: title,
+                                ),
                               ),
                             );
                           },
