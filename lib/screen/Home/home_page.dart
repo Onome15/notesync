@@ -11,7 +11,6 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
-    Color secColor = const Color.fromRGBO(33, 133, 176, 0.3);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(

@@ -9,6 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:notesync/database/firestore.dart';
+import '../../shared/toast.dart';
 import 'shared_methods.dart';
 
 class AddNotes extends StatefulWidget {
@@ -113,6 +114,7 @@ class AddNotesState extends State<AddNotes> {
                 const Text("Make this note public (Others will see it)"),
               ],
             ),
+
             // Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -120,7 +122,7 @@ class AddNotesState extends State<AddNotes> {
                 // Cancel Button
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context); // Close the screen
+                    Navigator.pop(context);
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -132,20 +134,28 @@ class AddNotesState extends State<AddNotes> {
                   ),
                 ),
                 const SizedBox(width: 10),
+
                 // Save Button
                 ElevatedButton(
                   onPressed: _notesController.text.trim().isNotEmpty
                       ? () async {
-                          String title = _titleController.text.trim();
                           String body = _notesController.text.trim();
+                          String title = _titleController.text.trim();
+
+                          if (title.isEmpty) {
+                            title = "No Title, Update"; // Default title
+                          }
 
                           if (widget.id == null) {
                             // Add a new note
-                            firestoreService.addNotes(title, body);
+                            firestoreService.addNote(
+                                title: title, body: body, isPublic: _isPublic);
+                            showToast(message: "Note added successfully!");
                           } else {
                             // Edit an existing note
                             firestoreService.updateNote(
-                                widget.id!, title, body);
+                                widget.id!, title, body, _isPublic);
+                            showToast(message: "Note updated successfully!");
                           }
 
                           await Future.delayed(const Duration(seconds: 1));

@@ -1,111 +1,136 @@
+import 'package:intl/intl.dart'; // Import the intl package
 import 'package:flutter/material.dart';
+import 'package:notesync/shared/loading.dart';
+import '../../../database/firestore.dart';
+import 'note_detail_page.dart'; // Ensure you import the NoteDetailPage
 
-import 'note_detail_page.dart';
+class OtherNotes extends StatelessWidget {
+  final FirestoreService firestoreService = FirestoreService();
+  final String searchQuery;
 
-class OtherNotes extends StatefulWidget {
-  final String searchQuery; // Accepts the search query
+  OtherNotes({super.key, required this.searchQuery});
 
-  const OtherNotes({super.key, required this.searchQuery});
-
-  @override
-  State<OtherNotes> createState() => _OtherNotesState();
-}
-
-class _OtherNotesState extends State<OtherNotes> {
   @override
   Widget build(BuildContext context) {
     Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
 
-    // Example notes map (title as key, body as value)
-    final Map<String, String> notes = {
-      " tutorial ides": "Build a weather app, social media app, etc.",
-      "H plan": "Viit the beach, go hiking, book a hotel.",
-      "W schedue": "Monday: Cardio, Tuesday: Strength, etc.",
-      "M notes": "Discuss project updates and deadlines.",
-      "Sho list": "Milk, Eggs, Bread, Butter, Fruits.",
-      "Flutter tutorial ideas": "Build a weather app, social media app, etc.",
-      "Holiday plans": "Visit the beach, go hiking, book a hotel.",
-      "Workout schedule": "Monday: Cardio, Tuesday: Strength, etc.",
-    };
-
-    // Filter notes based on the search query (searching titles only)
-    final filteredNotes = notes.entries
-        .where((entry) =>
-            entry.key.toLowerCase().contains(widget.searchQuery.toLowerCase()))
-        .toList();
-
-    return filteredNotes.isNotEmpty
-        ? ListView.builder(
-            itemCount: filteredNotes.length,
-            itemBuilder: (context, index) {
-              final title = filteredNotes[index].key;
-              final body = filteredNotes[index].value;
-
-              return Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                padding: const EdgeInsets.only(
-                    top: 5, bottom: 10, left: 10, right: 10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: primaryColor),
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor,
-                          ),
-                        ),
-                        const Spacer(),
-                        OutlinedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NoteDetailPage(
-                                  id: title,
-                                  title: title,
-                                  body: body,
-                                  date: title,
-                                ),
-                              ),
-                            );
-                          },
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            side: BorderSide(color: primaryColor),
-                          ),
-                          child: const Text("View"),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      body,
-                      style:
-                          const TextStyle(fontSize: 14, color: Colors.black87),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis, // Truncate to 2 lines
-                    ),
-                  ],
-                ),
-              );
-            },
-          )
-        : const Center(
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: firestoreService.fetchOtherNotes(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: Loading());
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
             child: Text(
-              "No notes found.",
+              "No public notes found.",
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           );
+        }
+
+        // Filter notes based on the search query (search in title)
+        final notes = snapshot.data!
+            .where((note) =>
+                note['title']
+                    ?.toLowerCase()
+                    .contains(searchQuery.toLowerCase()) ??
+                false)
+            .toList();
+
+        if (notes.isEmpty) {
+          return const Center(
+            child: Text(
+              "No matching public notes found.",
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: notes.length,
+          itemBuilder: (context, index) {
+            final note = notes[index];
+            final title = note['title'] ?? "Untitled";
+            final body = note['body'] ?? "No content";
+            final id = note['id'];
+            final date = note['timestamp']?.toDate();
+            final formattedDate = date != null
+                ? DateFormat('yyyy-MM-dd   HH:mm').format(date)
+                : "Unknown Date";
+
+            return Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(color: primaryColor),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: primaryColor,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              formattedDate,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NoteDetailPage(
+                                id: id,
+                                date: formattedDate,
+                              ),
+                            ),
+                          );
+                        },
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          side: BorderSide(color: primaryColor),
+                        ),
+                        child: const Text("View"),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    body,
+                    style: const TextStyle(fontSize: 14, color: Colors.black87),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis, // Truncate to 2 lines
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

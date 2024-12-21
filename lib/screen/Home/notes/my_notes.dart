@@ -15,7 +15,7 @@ class MyNotes extends StatelessWidget {
     Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
 
     return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: firestoreService.fetchNotes(),
+      stream: firestoreService.fetchMyNotes(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: Loading());
@@ -32,7 +32,10 @@ class MyNotes extends StatelessWidget {
         // Filter notes based on the search query (search in title)
         final notes = snapshot.data!
             .where((note) =>
-                note['title'].toLowerCase().contains(searchQuery.toLowerCase()))
+                note['title']
+                    ?.toLowerCase()
+                    .contains(searchQuery.toLowerCase()) ??
+                false)
             .toList();
 
         if (notes.isEmpty) {
@@ -48,8 +51,8 @@ class MyNotes extends StatelessWidget {
           itemCount: notes.length,
           itemBuilder: (context, index) {
             final note = notes[index];
-            final title = note['title'];
-            final body = note['body'];
+            final title = note['title'] ?? "Untitled";
+            final body = note['body'] ?? "No content";
             final id = note['id'];
             final date = note['timestamp']?.toDate();
             final formattedDate = date != null
@@ -58,8 +61,7 @@ class MyNotes extends StatelessWidget {
 
             return Container(
               margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.only(
-                  top: 5, bottom: 10, left: 10, right: 10),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 border: Border.all(color: primaryColor),
                 borderRadius: BorderRadius.circular(10),
@@ -102,8 +104,6 @@ class MyNotes extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => NoteDetailPage(
                                 id: id,
-                                title: title,
-                                body: body,
                                 date: formattedDate,
                               ),
                             ),

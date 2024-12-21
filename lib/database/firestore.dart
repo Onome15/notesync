@@ -1,60 +1,79 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:notesync/shared/toast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreService {
-  final CollectionReference notes =
-      FirebaseFirestore.instance.collection('notes');
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Add Notes to Database
-  Future<void> addNotes(String title, String body) async {
-    try {
-      const defaultTitle = "No Title, Update";
-      await notes.add({
-        'title': title.isNotEmpty == true ? title : defaultTitle,
-        'body': body,
-        'timestamp': FieldValue.serverTimestamp(), // Only use the Timestamp
-      });
-      showToast(message: "Note added successfully!");
-    } catch (e) {
-      showToast(message: "Failed to add note: $e");
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+  // Add Note
+  Future<void> addNote({
+    required String title,
+    required String body,
+    required bool isPublic,
+  }) async {
+    if (userId.isEmpty) {
+      throw Exception("User not authenticated");
     }
+
+    await _firestore.collection('notes').add({
+      'userId': userId,
+      'title': title,
+      'body': body,
+      'isPublic': isPublic,
+      'date': Timestamp.now(),
+    });
   }
 
-  // Fetch Notes From Database
-  Stream<List<Map<String, dynamic>>> fetchNotes() {
-    return notes
-        .orderBy('timestamp', descending: true)
+  // Fetch user-specific notes
+  Stream<List<Map<String, dynamic>>> fetchMyNotes() {
+    if (userId.isEmpty) {
+      throw Exception("User not authenticated");
+    }
+
+    return _firestore
+        .collection('notes')
+        .where('userId', isEqualTo: userId)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) {
-              return {
-                'id': doc.id,
-                'title': doc['title'],
-                'body': doc['body'],
-                'timestamp': doc['timestamp'], // Fetch the timestamp
-              };
-            }).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList());
   }
 
-  // Update Notes in Database
-  Future<void> updateNote(String id, String title, String body) async {
-    try {
-      await notes.doc(id).update({
-        'title': title,
-        'body': body,
-      });
-      showToast(message: "Note updated successfully!");
-    } catch (e) {
-      showToast(message: "Failed to update note: $e");
-    }
+  // Fetch Public Notes
+  Stream<List<Map<String, dynamic>>> fetchOtherNotes() {
+    return _firestore
+        .collection('notes')
+        .where('isPublic', isEqualTo: true)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList());
   }
 
-  // Delete Notes in Database
-  Future<void> deleteNote(String id) async {
-    try {
-      await notes.doc(id).delete();
-      showToast(message: "Note deleted successfully!");
-    } catch (e) {
-      showToast(message: "Failed to delete note: $e");
-    }
+//Update Notes
+  Future<void> updateNote(
+    String noteId,
+    String title,
+    String body,
+    bool isPublic,
+  ) async {
+    if (userId.isEmpty) throw Exception("User not authenticated");
+
+    await _firestore.collection('notes').doc(noteId).update({
+      'title': title,
+      'body': body,
+      'isPublic': isPublic,
+    });
+  }
+
+  // Update Note Visibility
+  Future<void> updateNoteVisibility(String noteId, bool isPublic) async {
+    await _firestore.collection('notes').doc(noteId).update({
+      'isPublic': isPublic,
+    });
+  }
+
+  // Delete Note
+  Future<void> deleteNote(String noteId) async {
+    await _firestore.collection('notes').doc(noteId).delete();
   }
 }
