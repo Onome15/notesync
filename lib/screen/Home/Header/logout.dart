@@ -1,40 +1,25 @@
-//an alert confirmation to cancel or continue with logout
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:notesync/shared/toast.dart';
 import '../../../services/auth.dart';
+import '../shared_methods.dart';
 
 Future<void> showLogoutConfirmationDialog(
     BuildContext context, WidgetRef ref) async {
   final authService = ref.read(authServiceProvider.notifier);
-  showDialog(
+
+  await showAlert(
     context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Logout Confirmation'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop(); // Close the dialog
-              try {
-                await authService.signOut();
-                const Text('Logged out successfully');
-              } catch (e) {
-                Text('Error: $e');
-              }
-            },
-            child: const Text('Logout'),
-          ),
-        ],
-      );
+    title: 'Logout Confirmation',
+    content: 'Are you sure you want to logout?',
+    onConfirm: () async {
+      try {
+        await authService.signOut();
+        showToast(message: "Logout successful");
+      } catch (e) {
+        showToast(message: "Logout failed");
+      }
     },
+    confirmText: 'Logout',
   );
 }

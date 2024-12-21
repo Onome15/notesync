@@ -54,7 +54,7 @@ class MyNotes extends StatelessWidget {
             final title = note['title'] ?? "Untitled";
             final body = note['body'] ?? "No content";
             final id = note['id'];
-            final date = note['timestamp']?.toDate();
+            final date = note['date']?.toDate();
             final formattedDate = date != null
                 ? DateFormat('yyyy-MM-dd   HH:mm').format(date)
                 : "Unknown Date";

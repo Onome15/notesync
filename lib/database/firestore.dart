@@ -21,7 +21,7 @@ class FirestoreService {
       'title': title,
       'body': body,
       'isPublic': isPublic,
-      'date': Timestamp.now(),
+      'date': FieldValue.serverTimestamp(),
     });
   }
 
@@ -34,6 +34,7 @@ class FirestoreService {
     return _firestore
         .collection('notes')
         .where('userId', isEqualTo: userId)
+        .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList());

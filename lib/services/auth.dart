@@ -175,6 +175,8 @@ class AuthService extends StateNotifier<bool> {
     return _firebaseAuth.currentUser;
   }
 
+  User? get currentUser => _firebaseAuth.currentUser;
+
   /// Listen for authentication state changes
   Stream<User?> authStateChanges() {
     return _firebaseAuth.authStateChanges();
