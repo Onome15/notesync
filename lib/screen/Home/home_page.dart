@@ -26,7 +26,7 @@ class HomePage extends ConsumerWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
+        padding: const EdgeInsets.only(top: 25, left: 15, right: 15),
         child: Column(
           children: [
             Row(

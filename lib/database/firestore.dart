@@ -45,6 +45,7 @@ class FirestoreService {
     return _firestore
         .collection('notes')
         .where('isPublic', isEqualTo: true)
+        .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList());
