@@ -7,9 +7,10 @@ import 'package:notesync/database/firestore.dart';
 
 import '../shared_methods.dart';
 
-class NoteDetailPage extends StatelessWidget {
+class NoteDetailPage extends StatefulWidget {
+  // Change to StatefulWidget
   final String date;
-  final String id; // The note's ID
+  final String id;
 
   const NoteDetailPage({
     super.key,
@@ -18,18 +19,25 @@ class NoteDetailPage extends StatelessWidget {
   });
 
   @override
+  State<NoteDetailPage> createState() => _NoteDetailPageState();
+}
+
+class _NoteDetailPageState extends State<NoteDetailPage> {
+  bool _showSlider = false;
+  double _fontSize = 16.0; // Default font size
+
+  @override
   Widget build(BuildContext context) {
     Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
     FirestoreService firestoreService = FirestoreService();
 
     final String? currentUserId = AuthService().currentUser?.uid;
 
-    // Fetch the note data once as a stream
-    Stream<DocumentSnapshot> noteStream =
-        FirebaseFirestore.instance.collection('notes').doc(id).snapshots();
-
     return StreamBuilder<DocumentSnapshot>(
-      stream: noteStream,
+      stream: FirebaseFirestore.instance
+          .collection('notes')
+          .doc(widget.id)
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -53,7 +61,50 @@ class NoteDetailPage extends StatelessWidget {
           appBar: AppBar(
             title: const Text("Note Details"),
             backgroundColor: primaryColor,
+            bottom: _showSlider
+                ? PreferredSize(
+                    preferredSize: const Size.fromHeight(60.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      height: 60.0,
+                      child: Row(
+                        children: [
+                          const Text(
+                            'Text Size',
+                          ),
+                          Expanded(
+                            child: Slider(
+                              value: _fontSize,
+                              activeColor: Colors.grey[400],
+                              inactiveColor: Colors.white.withOpacity(0.5),
+                              min: 12.0,
+                              max: 32.0,
+                              divisions: 10,
+                              onChanged: (value) {
+                                setState(() {
+                                  _fontSize = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Text(
+                            '$_fontSize',
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : null,
             actions: [
+              IconButton(
+                icon: Icon(
+                    _showSlider ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+                onPressed: () {
+                  setState(() {
+                    _showSlider = !_showSlider;
+                  });
+                },
+              ),
               if (currentUserId == ownerId) ...[
                 IconButton(
                   icon: const Icon(Icons.edit),
@@ -64,7 +115,7 @@ class NoteDetailPage extends StatelessWidget {
                         builder: (context) => AddNotes(
                           title: title,
                           body: body,
-                          id: id, // Pass the note's id
+                          id: widget.id, // Pass the note's id
                         ),
                       ),
                     );
@@ -81,7 +132,7 @@ class NoteDetailPage extends StatelessWidget {
                           "Are you sure you want to delete this note? This action cannot be undone.",
                       onConfirm: () {
                         // Delete logic here
-                        firestoreService.deleteNote(id);
+                        firestoreService.deleteNote(widget.id);
                         showToast(message: "Deleted Succesfully");
                         Navigator.pop(context); // Return to the previous screen
                       },
@@ -101,20 +152,23 @@ class NoteDetailPage extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: 25,
+                      fontSize: _fontSize + 4, // Slightly larger than body text
                       fontWeight: FontWeight.bold,
                       color: primaryColor,
                     ),
                     textAlign: TextAlign.justify,
                   ),
                   Text(
-                    date,
+                    widget.date,
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     body,
-                    style: const TextStyle(fontSize: 16, color: Colors.black87),
+                    style: TextStyle(
+                      fontSize: _fontSize,
+                      color: Colors.black87,
+                    ),
                     textAlign: TextAlign.justify,
                   ),
                   const SizedBox(height: 10),

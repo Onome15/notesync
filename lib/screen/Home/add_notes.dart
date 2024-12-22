@@ -70,110 +70,114 @@ class AddNotesState extends State<AddNotes> {
         title: Text(widget.id == null ? "Add Notes" : "Edit Notes"),
         backgroundColor: primaryColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: _titleController,
-              decoration: textInputDecoration.copyWith(
-                labelText: "Title (optional)",
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _titleController,
+                decoration: textInputDecoration.copyWith(
+                  labelText: "Title (optional)",
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Date: $formattedDate"),
-                Text("$characterCount characters"),
-              ],
-            ),
-            const SizedBox(height: 40),
-            // Notes Field
-            TextFormField(
-              controller: _notesController,
-              maxLines: 6,
-              decoration: textInputDecoration.copyWith(
-                labelText: "Type your notes here...",
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Date: $formattedDate"),
+                  Text("$characterCount characters"),
+                ],
               ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Checkbox(
-                  value: _isPublic,
-                  onChanged: (value) {
-                    setState(() {
-                      _isPublic = value ?? false;
-                    });
-                  },
-                  side: BorderSide(color: secColor),
-                  activeColor: primaryColor,
+              const SizedBox(height: 40),
+              // Notes Field
+              TextFormField(
+                controller: _notesController,
+                maxLines: 6,
+                decoration: textInputDecoration.copyWith(
+                  labelText: "Type your notes here...",
                 ),
-                const Text("Make this note public (Others will see it)"),
-              ],
-            ),
-
-            // Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                // Cancel Button
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: BorderSide(color: primaryColor),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Checkbox(
+                    value: _isPublic,
+                    onChanged: (value) {
+                      setState(() {
+                        _isPublic = value ?? false;
+                      });
+                    },
+                    side: BorderSide(color: secColor),
+                    activeColor: primaryColor,
                   ),
-                  child: Text(
-                    "Cancel",
-                    style: TextStyle(color: primaryColor),
+                  const Text("Make this note public (Others will see it)"),
+                ],
+              ),
+
+              // Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // Cancel Button
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: primaryColor),
+                    ),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(color: primaryColor),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
+                  const SizedBox(width: 10),
 
-                // Save Button
-                ElevatedButton(
-                  onPressed: _notesController.text.trim().isNotEmpty
-                      ? () async {
-                          String body = _notesController.text.trim();
-                          String title = _titleController.text.trim();
+                  // Save Button
+                  ElevatedButton(
+                    onPressed: _notesController.text.trim().isNotEmpty
+                        ? () async {
+                            String body = _notesController.text.trim();
+                            String title = _titleController.text.trim();
 
-                          if (title.isEmpty) {
-                            title = "No Title, Update"; // Default title
+                            if (title.isEmpty) {
+                              title = "No Title, Update"; // Default title
+                            }
+
+                            if (widget.id == null) {
+                              // Add a new note
+                              firestoreService.addNote(
+                                  title: title,
+                                  body: body,
+                                  isPublic: _isPublic);
+                              showToast(message: "Note added successfully!");
+                            } else {
+                              // Edit an existing note
+                              firestoreService.updateNote(
+                                  widget.id!, title, body, _isPublic);
+                              showToast(message: "Note updated successfully!");
+                            }
+
+                            await Future.delayed(const Duration(seconds: 1));
+                            Navigator.pop(context);
                           }
-
-                          if (widget.id == null) {
-                            // Add a new note
-                            firestoreService.addNote(
-                                title: title, body: body, isPublic: _isPublic);
-                            showToast(message: "Note added successfully!");
-                          } else {
-                            // Edit an existing note
-                            firestoreService.updateNote(
-                                widget.id!, title, body, _isPublic);
-                            showToast(message: "Note updated successfully!");
-                          }
-
-                          await Future.delayed(const Duration(seconds: 1));
-                          Navigator.pop(context);
-                        }
-                      : null, // Disable if no text in the body
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    disabledBackgroundColor: Colors.grey.shade300,
+                        : null, // Disable if no text in the body
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      disabledBackgroundColor: Colors.grey.shade300,
+                    ),
+                    child: const Text(
+                      "Save",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                  child: const Text(
-                    "Save",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

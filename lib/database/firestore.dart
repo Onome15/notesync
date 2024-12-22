@@ -51,7 +51,7 @@ class FirestoreService {
             snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList());
   }
 
-//Update Notes
+  //Update Notes
   Future<void> updateNote(
     String noteId,
     String title,
