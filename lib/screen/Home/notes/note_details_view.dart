@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../database/firestore.dart';
 import '../../../services/auth.dart';
 import '../../../shared/toast.dart';
+import '../Header/menu.dart';
 import '../add_notes.dart';
 import '../shared_methods.dart';
 
@@ -81,10 +82,27 @@ class NoteDetailView extends StatelessWidget {
             onPressed: () => onSliderVisibilityChanged(!showSlider),
           ),
           if (currentUserId == ownerId) ...[
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                Navigator.push(
+            buildCustomMenu(
+              context: context,
+              menuIcon: Icons.more_vert,
+              iconColor: Colors.white,
+              menuItems: getNoteDetailMenuItems(
+                context: context,
+                onDelete: () async {
+                  showAlert(
+                    context: context,
+                    title: "Delete Note",
+                    content:
+                        "Are you sure you want to delete this note? This action cannot be undone.",
+                    onConfirm: () {
+                      firestoreService.deleteNote(noteId);
+                      showToast(message: "Deleted Successfully");
+                      Navigator.pop(context);
+                    },
+                    confirmText: "Delete",
+                  );
+                },
+                onEdit: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => AddNotes(
@@ -93,26 +111,11 @@ class NoteDetailView extends StatelessWidget {
                       id: noteId,
                     ),
                   ),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () async {
-                showAlert(
-                  context: context,
-                  title: "Delete Note",
-                  content:
-                      "Are you sure you want to delete this note? This action cannot be undone.",
-                  onConfirm: () {
-                    firestoreService.deleteNote(noteId);
-                    showToast(message: "Deleted Successfully");
-                    Navigator.pop(context);
-                  },
-                  confirmText: "Delete",
-                );
-              },
-            ),
+                ),
+                onMakePrivate: () =>
+                    firestoreService.updateToPrivate(noteId, true),
+              ),
+            )
           ]
         ],
       ),
@@ -150,5 +153,30 @@ class NoteDetailView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<MenuItemData> getNoteDetailMenuItems({
+    required BuildContext context,
+    required Function() onDelete,
+    required Function() onEdit,
+    required Function() onMakePrivate,
+  }) {
+    return [
+      MenuItemData(
+        value: 'edit',
+        text: 'Edit Note',
+        onSelected: onEdit,
+      ),
+      MenuItemData(
+        value: 'delete',
+        text: 'Delete Note',
+        onSelected: onDelete,
+      ),
+      MenuItemData(
+        value: 'private',
+        text: 'Add to Private',
+        onSelected: onMakePrivate,
+      ),
+    ];
   }
 }

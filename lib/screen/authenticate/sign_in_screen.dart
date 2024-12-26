@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notesync/screen/authenticate/register_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../services/auth.dart';
 import '../../shared/loading.dart';

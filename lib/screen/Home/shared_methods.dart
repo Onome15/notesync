@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 
+import 'Header/menu.dart';
+
 Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
 Color secColor = const Color.fromRGBO(33, 133, 176, 0.3);
 
@@ -60,5 +62,30 @@ Future<void> showAlert({
         ],
       );
     },
+  );
+}
+
+Widget buildCustomMenu({
+  required BuildContext context,
+  required IconData menuIcon,
+  required Color iconColor,
+  required List<MenuItemData> menuItems,
+}) {
+  return PopupMenuButton<String>(
+    onSelected: (value) {
+      final selectedItem = menuItems.firstWhere((item) => item.value == value);
+      selectedItem.onSelected();
+    },
+    icon: Icon(
+      menuIcon,
+      size: 40,
+      color: iconColor,
+    ),
+    itemBuilder: (context) => menuItems
+        .map((item) => PopupMenuItem(
+              value: item.value,
+              child: Text(item.text),
+            ))
+        .toList(),
   );
 }

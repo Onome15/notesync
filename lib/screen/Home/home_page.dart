@@ -4,6 +4,7 @@ import 'package:notesync/screen/Home/Header/menu.dart';
 import 'package:notesync/screen/Home/Header/title.dart';
 import 'add_notes.dart';
 import 'notes/search.dart';
+import 'shared_methods.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -33,7 +34,12 @@ class HomePage extends ConsumerWidget {
               children: [
                 const Header(),
                 const Spacer(),
-                menu(context, ref),
+                buildCustomMenu(
+                  context: context,
+                  menuIcon: Icons.menu,
+                  iconColor: primaryColor,
+                  menuItems: getMainMenuItems(context, ref),
+                )
               ],
             ),
             const SizedBox(height: 25),
