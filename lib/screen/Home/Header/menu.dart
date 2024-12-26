@@ -1,11 +1,7 @@
-//profile page
-//private page
-//logout page
-
 import 'package:flutter/material.dart';
 import 'package:notesync/screen/Home/Header/logout.dart';
 import 'package:notesync/screen/Home/Header/profile.dart';
-import 'package:notesync/screen/Home/private.dart';
+import 'package:notesync/screen/Home/pin.dart';
 
 Widget menu(BuildContext context, ref) {
   Color primaryColor = const Color.fromRGBO(33, 133, 176, 1);
@@ -19,30 +15,18 @@ Widget menu(BuildContext context, ref) {
         } else if (value == 'private') {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const PrivatePage()),
+            MaterialPageRoute(builder: (context) => const PinScreen()),
           );
         } else if (value == 'logout') {
           showLogoutConfirmationDialog(context, ref);
         }
       },
       icon: GestureDetector(
-        child: ClipOval(
-          child: Image.asset(
-            'assets/signin/google.png', // Replace with dynamic path
-            width: 50,
-            height: 50,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              // Fallback to an icon if image loading fails
-              return Icon(
-                Icons.person,
-                size: 50,
-                color: primaryColor,
-              );
-            },
-          ),
-        ),
-      ),
+          child: Icon(
+        Icons.menu,
+        size: 40,
+        color: primaryColor,
+      )),
       itemBuilder: (context) => [
             const PopupMenuItem(
               value: 'profile',

@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   // Add Note
@@ -11,6 +10,7 @@ class FirestoreService {
     required String title,
     required String body,
     required bool isPublic,
+    bool isPrivate = false,
   }) async {
     if (userId.isEmpty) {
       throw Exception("User not authenticated");
@@ -21,6 +21,7 @@ class FirestoreService {
       'title': title,
       'body': body,
       'isPublic': isPublic,
+      'isPrivate': isPrivate,
       'date': FieldValue.serverTimestamp(),
     });
   }
@@ -34,6 +35,7 @@ class FirestoreService {
     return _firestore
         .collection('notes')
         .where('userId', isEqualTo: userId)
+        .where('isPrivate', isEqualTo: false)
         .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) =>
@@ -45,6 +47,27 @@ class FirestoreService {
     return _firestore
         .collection('notes')
         .where('isPublic', isEqualTo: true)
+        .where('isPrivate', isEqualTo: false)
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList());
+  }
+
+  // Fetch Private Notes
+  Stream<List<Map<String, dynamic>>> fetchPrivateNotes(String userId) {
+    if (userId.isEmpty) {
+      throw Exception("User not authenticated");
+    }
+
+    return _firestore
+        .collection('notes')
+        .where('userId', isEqualTo: userId)
+        .where(
+          'isPublic',
+          isEqualTo: false,
+        )
+        .where('isPrivate', isEqualTo: true)
         .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) =>
@@ -60,17 +83,25 @@ class FirestoreService {
   ) async {
     if (userId.isEmpty) throw Exception("User not authenticated");
 
+    await _firestore.collection('notes').doc(noteId).update(
+      {
+        'title': title,
+        'body': body,
+        'isPublic': isPublic,
+      },
+    );
+  }
+
+  // Update Note Visibility
+  Future<void> updateToPublic(String noteId, bool isPublic) async {
     await _firestore.collection('notes').doc(noteId).update({
-      'title': title,
-      'body': body,
       'isPublic': isPublic,
     });
   }
 
-  // Update Note Visibility
-  Future<void> updateNoteVisibility(String noteId, bool isPublic) async {
+  Future<void> updateToPrivate(String noteId, bool isPrivate) async {
     await _firestore.collection('notes').doc(noteId).update({
-      'isPublic': isPublic,
+      'isPrivate': isPrivate,
     });
   }
 

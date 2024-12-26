@@ -1,14 +1,17 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'private_notes.dart';
 
-class PrivatePage extends StatefulWidget {
-  const PrivatePage({Key? key}) : super(key: key);
+class PinScreen extends StatefulWidget {
+  const PinScreen({super.key});
 
   @override
-  State<PrivatePage> createState() => _PrivatePageState();
+  State<PinScreen> createState() => _PinScreenState();
 }
 
-class _PrivatePageState extends State<PrivatePage> {
+class _PinScreenState extends State<PinScreen> {
   final List<TextEditingController> _pinControllers =
       List.generate(4, (index) => TextEditingController());
   final List<TextEditingController> _confirmPinControllers =
@@ -29,30 +32,74 @@ class _PrivatePageState extends State<PrivatePage> {
     _loadSavedPin();
   }
 
-  Future<void> _loadSavedPin() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _savedPin = prefs.getString('private_pin');
-      _isPinSet = _savedPin != null;
-    });
-  }
+  final _storage = const FlutterSecureStorage(
+    aOptions: AndroidOptions(
+      encryptedSharedPreferences: true,
+    ),
+  );
 
   Future<void> _savePin(String pin) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('private_pin', pin);
-    setState(() {
-      _savedPin = pin;
-      _isPinSet = true;
-    });
+    try {
+      if (!Platform.isAndroid) {
+        // Fallback to regular storage for non-mobile platforms
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('private_pin', pin);
+      } else {
+        await _storage.write(key: 'private_pin', value: pin);
+      }
+      setState(() {
+        _savedPin = pin;
+        _isPinSet = true;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = "Error saving PIN. Please try again. $e ";
+      });
+    }
+  }
+
+  Future<void> _loadSavedPin() async {
+    try {
+      String? savedPin;
+      if (!Platform.isAndroid) {
+        // Fallback to regular storage for non-mobile platforms
+        final prefs = await SharedPreferences.getInstance();
+        savedPin = prefs.getString('private_pin');
+      } else {
+        savedPin = await _storage.read(key: 'private_pin');
+      }
+      setState(() {
+        _savedPin = savedPin;
+        _isPinSet = savedPin != null;
+      });
+    } catch (e) {
+      setState(() {
+        _savedPin = null;
+        _isPinSet = false;
+      });
+      print(e); // For debugging
+    }
   }
 
   Future<void> _resetPin() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('private_pin');
-    setState(() {
-      _savedPin = null;
-      _isPinSet = false;
-    });
+    try {
+      if (!Platform.isAndroid) {
+        // Fallback to regular storage for non-mobile platforms
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('private_pin');
+      } else {
+        await _storage.delete(key: 'private_pin');
+      }
+      setState(() {
+        _savedPin = null;
+        _isPinSet = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = "Error resetting PIN. Please try again.";
+      });
+      print(e); // For debugging
+    }
   }
 
   String _collectPin(List<TextEditingController> controllers) {
@@ -229,7 +276,7 @@ class _PrivatePageState extends State<PrivatePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const NoPrivateNotesPage()),
+                            builder: (context) => const PrivateNotes()),
                       );
                     } else {
                       setState(() {
@@ -246,26 +293,6 @@ class _PrivatePageState extends State<PrivatePage> {
               ),
             ],
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class NoPrivateNotesPage extends StatelessWidget {
-  const NoPrivateNotesPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Private Notes"),
-      ),
-      body: const Center(
-        child: Text(
-          "No private notes yet, add private notes from My Notes.",
-          style: TextStyle(fontSize: 16, color: Colors.grey),
-          textAlign: TextAlign.center,
         ),
       ),
     );
