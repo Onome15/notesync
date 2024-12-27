@@ -15,10 +15,18 @@ import 'shared_methods.dart';
 class AddNotes extends StatefulWidget {
   final String? title;
   final String? body;
-  final String? id; // ID is optional and used for editing an existing note
+  final String? id;
+  final bool? isPrivate;
+  final bool? isPublic;
 
-  const AddNotes({super.key, this.title, this.body, this.id});
-
+  const AddNotes({
+    super.key,
+    this.title,
+    this.body,
+    this.id,
+    this.isPrivate,
+    this.isPublic,
+  });
   @override
   AddNotesState createState() => AddNotesState();
 }
@@ -31,6 +39,7 @@ class AddNotesState extends State<AddNotes> {
   @override
   void initState() {
     super.initState();
+    _isPublic = widget.isPublic ?? false;
 
     // Initialize the text controllers with existing data if available
     if (widget.title != null && widget.body != null) {
@@ -100,19 +109,23 @@ class AddNotesState extends State<AddNotes> {
                 ),
               ),
               const SizedBox(height: 16),
+
+//this row beloow should not show isPrivate is true
               Row(
                 children: [
-                  Checkbox(
-                    value: _isPublic,
-                    onChanged: (value) {
-                      setState(() {
-                        _isPublic = value ?? false;
-                      });
-                    },
-                    side: BorderSide(color: secColor),
-                    activeColor: primaryColor,
-                  ),
-                  const Text("Make this note public (Others will see it)"),
+                  if (widget.isPrivate == null) ...[
+                    Checkbox(
+                      value: _isPublic,
+                      onChanged: (value) {
+                        setState(() {
+                          _isPublic = value ?? false;
+                        });
+                      },
+                      side: BorderSide(color: secColor),
+                      activeColor: primaryColor,
+                    ),
+                    const Text("Make this note public"),
+                  ],
                 ],
               ),
 

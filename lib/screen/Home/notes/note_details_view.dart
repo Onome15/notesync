@@ -15,17 +15,20 @@ class NoteDetailView extends StatelessWidget {
   final ValueChanged<double> onFontSizeChanged;
   final String date;
   final String noteId;
+  final bool? isPublic;
+  final bool? isPrivate;
 
-  const NoteDetailView({
-    super.key,
-    required this.noteData,
-    required this.showSlider,
-    required this.fontSize,
-    required this.onSliderVisibilityChanged,
-    required this.onFontSizeChanged,
-    required this.date,
-    required this.noteId,
-  });
+  const NoteDetailView(
+      {super.key,
+      required this.noteData,
+      required this.showSlider,
+      required this.fontSize,
+      required this.onSliderVisibilityChanged,
+      required this.onFontSizeChanged,
+      required this.date,
+      required this.noteId,
+      this.isPublic,
+      this.isPrivate});
 
   @override
   Widget build(BuildContext context) {
@@ -87,34 +90,75 @@ class NoteDetailView extends StatelessWidget {
               menuIcon: Icons.more_vert,
               iconColor: Colors.white,
               menuItems: getNoteDetailMenuItems(
-                context: context,
-                onDelete: () async {
-                  showAlert(
-                    context: context,
-                    title: "Delete Note",
-                    content:
-                        "Are you sure you want to delete this note? This action cannot be undone.",
-                    onConfirm: () {
-                      firestoreService.deleteNote(noteId);
-                      showToast(message: "Deleted Successfully");
-                      Navigator.pop(context);
-                    },
-                    confirmText: "Delete",
-                  );
-                },
-                onEdit: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddNotes(
-                      title: title,
-                      body: body,
-                      id: noteId,
-                    ),
-                  ),
-                ),
-                onMakePrivate: () =>
-                    firestoreService.updateToPrivate(noteId, true),
-              ),
+                  context: context,
+                  onEdit: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddNotes(
+                            title: title,
+                            body: body,
+                            id: noteId,
+                            isPrivate: isPrivate,
+                            isPublic: isPublic,
+                          ),
+                        ),
+                      ),
+                  onDelete: () async {
+                    showAlert(
+                      context: context,
+                      title: "Delete Note",
+                      content:
+                          "Are you sure you want to delete this note? This action cannot be undone.",
+                      onConfirm: () {
+                        firestoreService.deleteNote(noteId);
+                        showToast(message: "Deleted Successfully");
+                        Navigator.pop(context);
+                      },
+                      confirmText: "Delete",
+                    );
+                  },
+                  noteSection: () async {
+                    if (isPrivate == true) {
+                      showAlert(
+                        context: context,
+                        title: "Remove from Private",
+                        content:
+                            "This note will be removed from private notes. Are you sure?",
+                        onConfirm: () {
+                          firestoreService.updateToPrivate(noteId, false);
+                          showToast(message: "Note removed from private");
+                          Navigator.pop(context);
+                        },
+                        confirmText: "Remove",
+                      );
+                    } else if (isPublic == true) {
+                      showAlert(
+                        context: context,
+                        title: "Remove from Public",
+                        content:
+                            "This note will no longer be public. Are you sure?",
+                        onConfirm: () {
+                          firestoreService.updateToPublic(noteId, false);
+                          showToast(message: "Note removed from public");
+                          Navigator.pop(context);
+                        },
+                        confirmText: "Remove",
+                      );
+                    } else {
+                      showAlert(
+                        context: context,
+                        title: "Add Note To Private",
+                        content:
+                            "Private notes can only be accessed with your pin. Are you sure?",
+                        onConfirm: () {
+                          firestoreService.updateToPrivate(noteId, true);
+                          showToast(message: "Note is now private");
+                          Navigator.pop(context);
+                        },
+                        confirmText: "Private",
+                      );
+                    }
+                  }),
             )
           ]
         ],
@@ -159,7 +203,7 @@ class NoteDetailView extends StatelessWidget {
     required BuildContext context,
     required Function() onDelete,
     required Function() onEdit,
-    required Function() onMakePrivate,
+    required Function() noteSection,
   }) {
     return [
       MenuItemData(
@@ -173,9 +217,13 @@ class NoteDetailView extends StatelessWidget {
         onSelected: onDelete,
       ),
       MenuItemData(
-        value: 'private',
-        text: 'Add to Private',
-        onSelected: onMakePrivate,
+        value: 'section',
+        text: isPrivate == true
+            ? 'Remove from Private'
+            : isPublic == true
+                ? 'Remove from Public'
+                : 'Add to Private',
+        onSelected: noteSection,
       ),
     ];
   }

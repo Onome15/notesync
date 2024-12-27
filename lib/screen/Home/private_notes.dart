@@ -62,9 +62,8 @@ class _PrivateNotesState extends State<PrivateNotes> {
                     : "Unknown Date";
 
                 return Padding(
-                  padding: const EdgeInsets.only(top: 25, left: 15, right: 15),
+                  padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
                   child: Container(
-                    margin: const EdgeInsets.only(bottom: 10),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       border: Border.all(color: primaryColor),
@@ -109,6 +108,7 @@ class _PrivateNotesState extends State<PrivateNotes> {
                                     builder: (context) => NoteDetailPage(
                                       id: id,
                                       date: formattedDate,
+                                      isPrivate: true,
                                     ),
                                   ),
                                 );

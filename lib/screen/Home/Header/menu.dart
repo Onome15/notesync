@@ -43,27 +43,3 @@ List<MenuItemData> getMainMenuItems(BuildContext context, ref) {
 }
 
 // Step 4: Note Detail Menu Items
-List<MenuItemData> getNoteDetailMenuItems({
-  required BuildContext context,
-  required Function() onDelete,
-  required Function() onEdit,
-  required Function() onMakePrivate,
-}) {
-  return [
-    MenuItemData(
-      value: 'edit',
-      text: 'Edit Note',
-      onSelected: onEdit,
-    ),
-    MenuItemData(
-      value: 'delete',
-      text: 'Delete Note',
-      onSelected: onDelete,
-    ),
-    MenuItemData(
-      value: 'private',
-      text: 'Add to Private',
-      onSelected: onMakePrivate,
-    ),
-  ];
-}
