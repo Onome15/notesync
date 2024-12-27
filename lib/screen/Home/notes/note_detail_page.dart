@@ -5,15 +5,12 @@ import 'note_details_view.dart';
 class NoteDetailPage extends StatefulWidget {
   final String date;
   final String id;
-  final bool? isPublic;
-  final bool? isPrivate;
 
-  const NoteDetailPage(
-      {super.key,
-      required this.id,
-      required this.date,
-      this.isPublic,
-      this.isPrivate});
+  const NoteDetailPage({
+    super.key,
+    required this.id,
+    required this.date,
+  });
 
   @override
   State<NoteDetailPage> createState() => _NoteDetailPageState();
@@ -44,23 +41,22 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         }
 
         return NoteDetailView(
-            noteData: snapshot.data!,
-            showSlider: _showSlider,
-            fontSize: _fontSize,
-            onSliderVisibilityChanged: (show) {
-              setState(() {
-                _showSlider = show;
-              });
-            },
-            onFontSizeChanged: (size) {
-              setState(() {
-                _fontSize = size;
-              });
-            },
-            date: widget.date,
-            noteId: widget.id,
-            isPrivate: widget.isPrivate,
-            isPublic: widget.isPublic);
+          noteData: snapshot.data!,
+          showSlider: _showSlider,
+          fontSize: _fontSize,
+          onSliderVisibilityChanged: (show) {
+            setState(() {
+              _showSlider = show;
+            });
+          },
+          onFontSizeChanged: (size) {
+            setState(() {
+              _fontSize = size;
+            });
+          },
+          date: widget.date,
+          noteId: widget.id,
+        );
       },
     );
   }

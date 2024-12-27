@@ -35,7 +35,7 @@ class FirestoreService {
     return _firestore
         .collection('notes')
         .where('userId', isEqualTo: userId)
-        .where('isPrivate', isEqualTo: false)
+        .where('isPrivate', isEqualTo: false) // Add this filter
         .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) =>
@@ -47,7 +47,7 @@ class FirestoreService {
     return _firestore
         .collection('notes')
         .where('isPublic', isEqualTo: true)
-        .where('isPrivate', isEqualTo: false)
+        .where('isPrivate', isEqualTo: false) // Add this filter
         .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) =>
@@ -108,5 +108,20 @@ class FirestoreService {
   // Delete Note
   Future<void> deleteNote(String noteId) async {
     await _firestore.collection('notes').doc(noteId).delete();
+  }
+
+  Future<Map<String, int>> getNotesCounts(String userId) async {
+    final QuerySnapshot snapshot = await _firestore
+        .collection('notes')
+        .where('userId', isEqualTo: userId)
+        .get();
+
+    final docs = snapshot.docs;
+
+    return {
+      'myNotes': docs.length,
+      'private': docs.where((doc) => doc['isPrivate'] == true).length,
+      'public': docs.where((doc) => doc['isPublic'] == true).length,
+    };
   }
 }

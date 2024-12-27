@@ -15,20 +15,17 @@ class NoteDetailView extends StatelessWidget {
   final ValueChanged<double> onFontSizeChanged;
   final String date;
   final String noteId;
-  final bool? isPublic;
-  final bool? isPrivate;
 
-  const NoteDetailView(
-      {super.key,
-      required this.noteData,
-      required this.showSlider,
-      required this.fontSize,
-      required this.onSliderVisibilityChanged,
-      required this.onFontSizeChanged,
-      required this.date,
-      required this.noteId,
-      this.isPublic,
-      this.isPrivate});
+  const NoteDetailView({
+    super.key,
+    required this.noteData,
+    required this.showSlider,
+    required this.fontSize,
+    required this.onSliderVisibilityChanged,
+    required this.onFontSizeChanged,
+    required this.date,
+    required this.noteId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +33,11 @@ class NoteDetailView extends StatelessWidget {
     FirestoreService firestoreService = FirestoreService();
     final String? currentUserId = AuthService().currentUser?.uid;
 
-    String title = noteData['title'] ?? 'Untitled';
+    String title = noteData['title'];
     String body = noteData['body'] ?? 'No content available';
     String ownerId = noteData['userId'];
+    bool isPublic = noteData['isPublic'] ?? false;
+    bool isPrivate = noteData['isPrivate'] ?? false;
 
     return Scaffold(
       appBar: AppBar(
@@ -51,28 +50,44 @@ class NoteDetailView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   height: 60.0,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Text Size'),
-                      Expanded(
-                        child: SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            trackHeight: 2.0,
-                            thumbShape: const RoundSliderThumbShape(
-                              enabledThumbRadius: 6.0,
-                            ),
-                          ),
-                          child: Slider(
-                            value: fontSize,
-                            activeColor: Colors.grey[400],
-                            inactiveColor: Colors.white.withOpacity(0.5),
-                            min: 12.0,
-                            max: 22.0,
-                            divisions: 20,
-                            onChanged: onFontSizeChanged,
+                      IconButton(
+                        icon: const Icon(Icons.remove_circle_outline),
+                        onPressed: () {
+                          if (fontSize > 12.0) {
+                            onFontSizeChanged(fontSize - 1);
+                          }
+                        },
+                        color: fontSize > 12.0
+                            ? Colors.grey[900]
+                            : Colors.grey[600],
+                      ),
+                      const SizedBox(width: 50),
+                      Container(
+                        width: 60,
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${fontSize.round()}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[800],
                           ),
                         ),
                       ),
-                      Text('$fontSize'),
+                      const SizedBox(width: 50),
+                      IconButton(
+                        icon: const Icon(Icons.add_circle_outline),
+                        onPressed: () {
+                          if (fontSize < 22.0) {
+                            onFontSizeChanged(fontSize + 1);
+                          }
+                        },
+                        color: fontSize < 22.0
+                            ? Colors.grey[900]
+                            : Colors.grey[600],
+                      ),
                     ],
                   ),
                 ),
@@ -88,8 +103,10 @@ class NoteDetailView extends StatelessWidget {
             buildCustomMenu(
               context: context,
               menuIcon: Icons.more_vert,
-              iconColor: Colors.white,
+              iconColor: Colors.black45,
               menuItems: getNoteDetailMenuItems(
+                  isPrivate: isPrivate,
+                  isPublic: isPublic,
                   context: context,
                   onEdit: () => Navigator.push(
                         context,
@@ -134,7 +151,7 @@ class NoteDetailView extends StatelessWidget {
                     } else if (isPublic == true) {
                       showAlert(
                         context: context,
-                        title: "Remove from Public",
+                        title: "Remove from Others",
                         content:
                             "This note will no longer be public. Are you sure?",
                         onConfirm: () {
@@ -155,7 +172,7 @@ class NoteDetailView extends StatelessWidget {
                           showToast(message: "Note is now private");
                           Navigator.pop(context);
                         },
-                        confirmText: "Private",
+                        confirmText: "Continue",
                       );
                     }
                   }),
@@ -204,6 +221,8 @@ class NoteDetailView extends StatelessWidget {
     required Function() onDelete,
     required Function() onEdit,
     required Function() noteSection,
+    required bool isPublic,
+    required bool isPrivate,
   }) {
     return [
       MenuItemData(
@@ -218,10 +237,10 @@ class NoteDetailView extends StatelessWidget {
       ),
       MenuItemData(
         value: 'section',
-        text: isPrivate == true
+        text: isPrivate
             ? 'Remove from Private'
-            : isPublic == true
-                ? 'Remove from Public'
+            : isPublic
+                ? 'Remove from Others'
                 : 'Add to Private',
         onSelected: noteSection,
       ),

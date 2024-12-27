@@ -105,7 +105,6 @@ class OtherNotes extends StatelessWidget {
                               builder: (context) => NoteDetailPage(
                                 id: id,
                                 date: formattedDate,
-                                isPublic: true,
                               ),
                             ),
                           );

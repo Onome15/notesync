@@ -108,7 +108,6 @@ class _PrivateNotesState extends State<PrivateNotes> {
                                     builder: (context) => NoteDetailPage(
                                       id: id,
                                       date: formattedDate,
-                                      isPrivate: true,
                                     ),
                                   ),
                                 );

@@ -110,10 +110,10 @@ class AddNotesState extends State<AddNotes> {
               ),
               const SizedBox(height: 16),
 
-//this row beloow should not show isPrivate is true
+//this row below should not show isPrivate is true
               Row(
                 children: [
-                  if (widget.isPrivate == null) ...[
+                  if (widget.isPrivate == false) ...[
                     Checkbox(
                       value: _isPublic,
                       onChanged: (value) {
@@ -124,7 +124,10 @@ class AddNotesState extends State<AddNotes> {
                       side: BorderSide(color: secColor),
                       activeColor: primaryColor,
                     ),
-                    const Text("Make this note public"),
+                    _isPublic
+                        ? const Text("This note is public, untick to remove")
+                        : const Text(
+                            "Make note public, (Other users can see it)"),
                   ],
                 ],
               ),

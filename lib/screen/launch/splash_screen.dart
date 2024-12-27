@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notesync/screen/Home/home_page.dart';
-import 'package:notesync/screen/authenticate/register_screen.dart';
-import 'package:notesync/screen/authenticate/sign_in_screen.dart';
 import 'package:notesync/screen/wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart'; // Import SpinKit
