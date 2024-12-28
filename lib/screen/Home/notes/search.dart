@@ -50,7 +50,7 @@ class NotesSearchState extends State<NotesSearch> {
               ),
               toggleButton(
                 isSelected: !_showMyNotes,
-                text: "Others",
+                text: "Public Notes",
                 showNotes: false,
               ),
             ],

@@ -59,9 +59,8 @@ class NoteDetailView extends StatelessWidget {
                             onFontSizeChanged(fontSize - 1);
                           }
                         },
-                        color: fontSize > 12.0
-                            ? Colors.grey[900]
-                            : Colors.grey[600],
+                        color:
+                            fontSize > 12.0 ? Colors.black : Colors.grey[600],
                       ),
                       const SizedBox(width: 50),
                       Container(
@@ -69,10 +68,10 @@ class NoteDetailView extends StatelessWidget {
                         alignment: Alignment.center,
                         child: Text(
                           '${fontSize.round()}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey[800],
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -80,13 +79,12 @@ class NoteDetailView extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.add_circle_outline),
                         onPressed: () {
-                          if (fontSize < 22.0) {
+                          if (fontSize < 40.0) {
                             onFontSizeChanged(fontSize + 1);
                           }
                         },
-                        color: fontSize < 22.0
-                            ? Colors.grey[900]
-                            : Colors.grey[600],
+                        color:
+                            fontSize < 40.0 ? Colors.black : Colors.grey[600],
                       ),
                     ],
                   ),
@@ -151,7 +149,7 @@ class NoteDetailView extends StatelessWidget {
                     } else if (isPublic == true) {
                       showAlert(
                         context: context,
-                        title: "Remove from Others",
+                        title: "Remove from Public",
                         content:
                             "This note will no longer be public. Are you sure?",
                         onConfirm: () {
@@ -240,7 +238,7 @@ class NoteDetailView extends StatelessWidget {
         text: isPrivate
             ? 'Remove from Private'
             : isPublic
-                ? 'Remove from Others'
+                ? 'Remove from Public'
                 : 'Add to Private',
         onSelected: noteSection,
       ),

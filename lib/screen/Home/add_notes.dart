@@ -113,7 +113,7 @@ class AddNotesState extends State<AddNotes> {
 //this row below should not show isPrivate is true
               Row(
                 children: [
-                  if (widget.isPrivate == false) ...[
+                  if (widget.isPrivate != true) ...[
                     Checkbox(
                       value: _isPublic,
                       onChanged: (value) {
@@ -160,7 +160,7 @@ class AddNotesState extends State<AddNotes> {
                             String title = _titleController.text.trim();
 
                             if (title.isEmpty) {
-                              title = "No Title, Update"; // Default title
+                              title = "No Title, Update";
                             }
 
                             if (widget.id == null) {

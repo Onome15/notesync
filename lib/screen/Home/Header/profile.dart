@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notesync/screen/Home/notes/others.dart';
 import 'package:notesync/screen/authenticate/shared_methods.dart';
 import 'package:notesync/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -129,8 +130,7 @@ class _ProfileState extends ConsumerState<Profile> {
                       Icons.public,
                       () => Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomePage()),
+                        MaterialPageRoute(builder: (context) => OtherNotes()),
                       ),
                     ),
                   ],

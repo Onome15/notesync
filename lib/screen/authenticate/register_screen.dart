@@ -67,6 +67,8 @@ class RegisterScreenState extends ConsumerState<RegisterScreen> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your name';
+                      } else if (!value.contains(" ")) {
+                        return "Please enter both first and last name";
                       }
                       return null;
                     },
@@ -84,8 +86,10 @@ class RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                      if (value!.isEmpty) {
+                        return "Please enter your email";
+                      } else if (!RegExp(r'^\S+@\S+\.\S+$').hasMatch(value)) {
+                        return "Please enter a valid email address";
                       }
                       return null;
                     },
