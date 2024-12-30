@@ -119,7 +119,11 @@ class FirestoreService {
     final docs = snapshot.docs;
 
     return {
-      'myNotes': docs.length,
+      'myNotes': docs
+          .where((doc) =>
+              doc['isPrivate'] == false && doc['isPublic'] == false ||
+              doc['isPublic'] == true)
+          .length,
       'private': docs.where((doc) => doc['isPrivate'] == true).length,
       'public': docs.where((doc) => doc['isPublic'] == true).length,
     };

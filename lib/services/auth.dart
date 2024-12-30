@@ -37,7 +37,7 @@ class AuthService extends StateNotifier<bool> {
         showToast(message: "An unknown error occurred.");
       }
     } finally {
-      state = false; // Set loading to false after registration attempt
+      state = false;
     }
     return null;
   }
@@ -77,7 +77,6 @@ class AuthService extends StateNotifier<bool> {
       // Handle Firebase-specific errors
       showToast(message: "Error during anonymous sign-in: ${e.message}");
       state = false;
-// Optionally rethrow to propagate the error further
     } catch (e) {
       // Handle other unexpected errors
       showToast(message: "Unexpected error during anonymous sign-in: $e");
@@ -90,8 +89,6 @@ class AuthService extends StateNotifier<bool> {
   Future<User?> signInWithGoogle() async {
     state = true;
     try {
-      // _setLoading(true); // Start loading
-//
       // Trigger the Google authentication flow
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
@@ -143,7 +140,7 @@ class AuthService extends StateNotifier<bool> {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
       showToast(message: "Password reset email sent. Check your inbox.");
       // ignore: use_build_context_synchronously
-      await Future.delayed(const Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 2));
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       state = false;
@@ -157,6 +154,8 @@ class AuthService extends StateNotifier<bool> {
     } catch (e) {
       state = false;
       showToast(message: "An unknown error occurred: $e");
+    } finally {
+      state = false; // Set loading to false, regardless of success or failure
     }
   }
 
@@ -165,6 +164,7 @@ class AuthService extends StateNotifier<bool> {
     state = true;
     try {
       await _firebaseAuth.signOut();
+      state = false;
     } finally {
       state = false; // Set loading to false
     }

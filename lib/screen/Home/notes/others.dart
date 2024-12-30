@@ -6,9 +6,9 @@ import 'note_detail_page.dart'; // Ensure you import the NoteDetailPage
 
 class OtherNotes extends StatelessWidget {
   final FirestoreService firestoreService = FirestoreService();
-  final String? searchQuery;
+  final String searchQuery;
 
-  OtherNotes({super.key, this.searchQuery});
+  OtherNotes({super.key, required this.searchQuery});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class OtherNotes extends StatelessWidget {
             .where((note) =>
                 note['title']
                     ?.toLowerCase()
-                    .contains(searchQuery!.toLowerCase()) ??
+                    .contains(searchQuery.toLowerCase()) ??
                 false)
             .toList();
 

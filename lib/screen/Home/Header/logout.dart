@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notesync/screen/wrapper.dart';
 import 'package:notesync/shared/toast.dart';
 import '../../../services/auth.dart';
 import '../shared_methods.dart';
@@ -15,6 +16,11 @@ Future<void> showLogoutConfirmationDialog(
     onConfirm: () async {
       try {
         await authService.signOut();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const Wrapper(showSignIn: true)),
+        );
         showToast(message: "Logout successful");
       } catch (e) {
         showToast(message: "Logout failed");

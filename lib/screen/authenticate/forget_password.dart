@@ -5,7 +5,7 @@ import '../../shared/loading.dart';
 import '../authenticate/shared_methods.dart';
 
 class ForgotPasswordPage extends ConsumerStatefulWidget {
-  const ForgotPasswordPage({Key? key}) : super(key: key);
+  const ForgotPasswordPage({super.key});
 
   @override
   ConsumerState<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
@@ -60,8 +60,10 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                      if (value!.isEmpty) {
+                        return "Please enter your email";
+                      } else if (!RegExp(r'^\S+@\S+\.\S+$').hasMatch(value)) {
+                        return "Please enter a valid email address";
                       }
                       return null;
                     },
