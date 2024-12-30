@@ -18,19 +18,6 @@ final textInputDecoration = InputDecoration(
   ),
 );
 
-Widget switchButton(themeMode, themeNotifier) {
-  return IconButton(
-    icon: Icon(
-      themeMode == ThemeMode.dark ? Icons.nights_stay : Icons.wb_sunny,
-      color: themeMode == ThemeMode.dark ? Colors.white : Colors.black,
-    ),
-    onPressed: () {
-      themeNotifier.toggleTheme();
-    },
-    tooltip: 'Toggle Theme',
-  );
-}
-
 Widget headerWithIcon({
   double fontSize = 30,
   double sizedBoxWidth = 5,

@@ -1,8 +1,10 @@
 import 'dart:io' show Platform;
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'private_notes.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class PinScreen extends StatefulWidget {
   const PinScreen({super.key});
@@ -40,20 +42,25 @@ class _PinScreenState extends State<PinScreen> {
 
   Future<void> _savePin(String pin) async {
     try {
-      if (!Platform.isAndroid) {
-        // Fallback to regular storage for non-mobile platforms
+      if (kIsWeb) {
+        // Web storage implementation
+        html.window.localStorage['private_pin'] = pin;
+      } else if (Platform.isAndroid) {
+        // Android secure storage
+        await _storage.write(key: 'private_pin', value: pin);
+      } else {
+        // Fallback for other platforms
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('private_pin', pin);
-      } else {
-        await _storage.write(key: 'private_pin', value: pin);
       }
+
       setState(() {
         _savedPin = pin;
         _isPinSet = true;
       });
     } catch (e) {
       setState(() {
-        _errorMessage = "Error saving PIN. Please try again. $e ";
+        _errorMessage = "Error saving PIN. Please try again.";
       });
     }
   }
@@ -77,7 +84,6 @@ class _PinScreenState extends State<PinScreen> {
         _savedPin = null;
         _isPinSet = false;
       });
-      print(e); // For debugging
     }
   }
 
@@ -98,7 +104,6 @@ class _PinScreenState extends State<PinScreen> {
       setState(() {
         _errorMessage = "Error resetting PIN. Please try again.";
       });
-      print(e); // For debugging
     }
   }
 
